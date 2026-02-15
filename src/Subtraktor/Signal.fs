@@ -63,10 +63,10 @@ let add (s1: Signal) (s2: Signal) : Signal =
 /// </summary>
 /// <remarks>
 /// <c>scale</c> adjusts the overall loudness of a signal without altering its
-/// shape, frequency content, or phase. This is the simplest form of gain-control
-/// A scale factor greater than 1 amplifies the signal; a factor between 0 and 1
-/// attenuates it. Negative values invert the waveform, which can be musically
-/// meaningful in some contexts.
+/// shape, frequency content, or phase. This is the simplest form of
+/// gain-control. A scale factor greater than 1 amplifies the signal; a factor
+/// between 0 and 1 attenuates it. Negative values invert the waveform, which
+/// can be musically meaningful in some contexts.
 /// </remarks>    
 let scale (k: float) (s: Signal) : Signal =
     fun t -> k * s t
