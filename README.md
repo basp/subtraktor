@@ -33,3 +33,50 @@ grows slowly, intentionally, and with a clear sense of purpose.
 * Minimalism with maximal impact.
 * Craftsmanship over convenience.
 * Transparency in design and implementation.
+
+## Roadmap
+Subtraktor will grow slowly and intentionally. Each milestone focuses on depth, 
+clarity, and refinement rather than feature accumulation. This roadmap is a 
+guide, not a contract — it will evolve as the project does.
+
+### 1. Core Signal Path (Vertical Slice)
+* Implement a basic oscillator (sine, saw, square)
+* Add a simple filter (low‑pass to start)
+* Introduce an ADSR envelope
+* Render audio to a buffer or file
+
+**Goal:** a minimal but complete subtractive chain.
+
+### 2. Functional Architecture
+* Define a clean, composable public API
+* Ensure all public functions behave as pure
+* Introduce internal mutation only where it improves clarity or performance
+* Establish conventions for composing and binding DSP functions
+
+**Goal:** a functional surface with pragmatic internals.
+
+### 3. Refinement & Depth
+* Improve oscillator quality (band‑limiting, anti‑aliasing)
+* Enhance filter behavior (resonance, stability, character)
+* Refine envelope curves and timing accuracy
+* Add tests and visualizations for DSP components
+
+**Goal:** deepen the core instead of widening the feature set.
+
+### 4. Transparency & Craftsmanship
+* Document design decisions and trade‑offs
+* Add diagrams or flow descriptions for the signal path
+* Keep the codebase small, readable, and intentional
+* Remove or simplify anything that adds unnecessary complexity
+
+**Goal:** a codebase that teaches as much as it performs.
+
+### 5. Optional Future Exploration
+These are not promises — just possible directions if they align with the 
+philosophy:
+* Additional oscillator types
+* Additional filter modes
+* Modulation routing
+* A minimal UI or REPL‑based patching interface
+
+**Goal:** only expand when it strengthens the core experience.
