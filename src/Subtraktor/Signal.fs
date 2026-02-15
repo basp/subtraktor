@@ -14,9 +14,27 @@ open Subtraktor.Units
 /// </remarks>
 type Signal = float<s> -> float
 
+/// <summary>
+/// Creates a signal that always returns the same amplitude, regardless of
+/// time.
+/// </summary>
+/// <remarks>
+/// <c>constant</c> is useful for constructing time‑invariant signals such as
+/// offsets, biases, or control values. It reinforces the idea that a
+/// <c>Signal</c> is simply a function of time: even if the time parameter is
+/// ignored, the result is still a valid signal in the <b>Subtraktor</b> model.
+/// </remarks>
 let constant (value: float) : Signal =
     fun _ -> value
     
+/// <summary>
+/// A signal that always produces zero amplitude.
+/// </summary>
+/// <remarks>
+/// <c>silence</c> is the additive identity for signals: adding it to any other
+/// signal leaves the original unchanged. It is useful as a neutral element
+/// when building signals incrementally or conditionally.
+/// </remarks>    
 let silence : Signal = constant 0.0
 
 /// <summary>
