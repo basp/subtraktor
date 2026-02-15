@@ -41,19 +41,19 @@ let silence : Signal = constant 0.0
 /// Combines two signals by adding their amplitudes pointwise.
 /// </summary>
 /// <remarks>
-/// <p>
+/// <para>
 /// <c>add</c> models the physical superposition of sound waves: at any moment
 /// in time, the resulting amplitude is the sum of the individual amplitudes.
 /// This operation is pure, time-aligned, and does not introduce phase shifts
 /// or distortion.
-/// </p>
+/// </para>
 /// 
-/// <p>
+/// <para>
 /// Because addition is associative and commutative, complex signals can be
 /// built from simpler ones in a predictable way. Callers are responsible for
 /// ensuring the resulting amplitude stays within a desired range (e.g., to
 /// avoid clipping).
-/// </p>
+/// </para>
 /// </remarks>
 let add (s1: Signal) (s2: Signal) : Signal =
     fun t -> s1 t + s2 t
@@ -99,21 +99,21 @@ let apply (f: Signal -> Signal) (s: Signal) : Signal =
 /// Converts a <b>continuous-time signal</b> into a <b>discrete buffer of audio samples</b>.
 /// </summary>
 /// <remarks>
-/// <p>
+/// <para>
 /// <c>render</c> is the bridge between <b>Subtraktor’s mathematical signal
 /// model</b> and real-world digital audio. A <c>Signal</c> represents an ideal,
 /// continuous function of time; rendering evaluates that function at evenly
 /// spaced time steps determined by the sample rate.
-/// </p>
+/// </para>
 ///
-/// <p>
+/// <para>
 /// The resulting array contains <c>duration * sampleRate</c> samples, starting
 /// at <c>t = 0</c> seconds. Each sample is produced by calling the signal with
 /// a time value expressed in seconds. The function is pure: rendering the same
 /// signal with the same parameters always yields the same output.
-///</p>
+///</para>
 ///
-/// <p>
+/// <para>
 /// Constraints:
 /// <ul>
 /// <li><c>sampleRate</c> must be a positive frequency in Hertz.</li>
@@ -121,7 +121,7 @@ let apply (f: Signal -> Signal) (s: Signal) : Signal =
 /// <li>No antialiasing or band-limiting is performed; callers are responsible
 /// for ensuring the signal is suitable for discrete sampling.</li>
 /// </ul>
-/// </p>
+/// </para>
 /// </remarks>
 let render
     (sampleRate: float<Hz>)
