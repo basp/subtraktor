@@ -1,0 +1,6 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Subtraktor.Tests/Subtraktor.Tests.fsproj" />
+    <Project Path="src/Subtraktor/Subtraktor.fsproj" />
+  </Folder>
+</Solution>
