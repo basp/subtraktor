@@ -19,9 +19,37 @@ let constant (value: float) : Signal =
     
 let silence : Signal = constant 0.0
 
+/// <summary>
+/// Combines two signals by adding their amplitudes pointwise.
+/// </summary>
+/// <remarks>
+/// <p>
+/// <c>add</c> models the physical superposition of sound waves: at any moment
+/// in time, the resulting amplitude is the sum of the individual amplitudes.
+/// This operation is pure, time-aligned, and does not introduce phase shifts
+/// or distortion.
+/// </p>
+/// 
+/// <p>
+/// Because addition is associative and commutative, complex signals can be
+/// built from simpler ones in a predictable way. Callers are responsible for
+/// ensuring the resulting amplitude stays within a desired range (e.g., to
+/// avoid clipping).
+/// </p>
+/// </remarks>
 let add (s1: Signal) (s2: Signal) : Signal =
     fun t -> s1 t + s2 t
     
+/// <summary>
+/// Multiplies a signal’s amplitude by a constant factor.
+/// </summary>
+/// <remarks>
+/// <c>scale</c> adjusts the overall loudness of a signal without altering its
+/// shape, frequency content, or phase. This is the simplest form of gain-control
+/// A scale factor greater than 1 amplifies the signal; a factor between 0 and 1
+/// attenuates it. Negative values invert the waveform, which can be musically
+/// meaningful in some contexts.
+/// </remarks>    
 let scale (k: float) (s: Signal) : Signal =
     fun t -> k * s t
     
