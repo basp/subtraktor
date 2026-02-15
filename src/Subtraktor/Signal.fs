@@ -1,6 +1,9 @@
 ﻿module Subtraktor.Signal
 
-type Signal = float -> float
+open FSharp.Data.UnitSystems.SI.UnitSymbols
+open Subtraktor.Units
+
+type Signal = float<s> -> float
 
 let constant (value: float) : Signal =
     fun _ -> value
@@ -17,4 +20,12 @@ let mix (s1: Signal) (s2: Signal) : Signal =
     scale 0.5 (add s1 s2)
     
 let apply (f: Signal -> Signal) (s: Signal) : Signal =
-    f s
+    f s   
+
+let render (sampleRate: float<Hz>) (duration: float<s>) (signal: Signal) : float[] =
+    let sampleCount = int (duration * sampleRate)
+    Array.init sampleCount (fun i ->
+        let t = (float (i * 1<samples>) / sampleRate)
+        signal t)
+    
+    
