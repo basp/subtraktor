@@ -23,4 +23,4 @@ add c3 f3
 |> apply (add d3)
 |> withEnvelope (ad 2.0<s> 3.0<s>)
 |> render 44100.0<Hz> 5.0<s>
-|> writeWav "d:/temp/ad.wav" 44100.0<Hz>
+|> writeWav "some/path/ad.wav" 44100.0<Hz>
