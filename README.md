@@ -7,8 +7,8 @@ idiomatic F#. It’s designed as a learning project and a craft project in equal
 measure: a place where clear concepts, composable functions, and thoughtful 
 engineering come together to form a small but expressive sound engine.
 
-At its core, Subtraktor models the classic subtractive signal path—oscillator, 
-filter, envelope, and renderer—using simple, predictable building blocks. Each
+At its core, Subtraktor models the classic subtractive signal path — oscillator, 
+filter, envelope, and renderer — using simple, predictable building blocks. Each
 component is implemented as a composable function that maps directly to familiar 
 synthesis concepts, allowing complex behaviour to emerge from small, 
 well‑understood parts.

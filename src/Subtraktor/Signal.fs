@@ -71,6 +71,21 @@ let add (s1: Signal) (s2: Signal) : Signal =
 let scale (k: float) (s: Signal) : Signal =
     fun t -> k * s t
     
+/// <summary>
+/// Mixes two signals with equal weight by averaging their amplitudes.
+/// </summary>
+/// <remarks>
+/// <para>
+/// <c>mix</c> provides a simple, balanced blend of two signals. It is
+/// equivalent to scaling each signal by <c>0.5</c> and adding them together,
+/// producing a symmetric mix without favoring either input.
+/// </para>
+/// <para>
+/// This combinator is intentionally minimal. More advanced mixing strategies —
+/// such as weighted blends, equal‑power panning, or crossfades — can be built
+/// on top of this primitive.
+/// </para>
+/// </remarks>    
 let mix (s1: Signal) (s2: Signal) : Signal =
     scale 0.5 (add s1 s2)
     
