@@ -3,14 +3,7 @@
 open Xunit
 open FSharp.Data.UnitSystems.SI.UnitSymbols
 open Subtraktor.Osc
-
-let approxEqual x y =
-    let closeEnough = 1e-6
-    abs (x - y) < closeEnough   
-
-let approxZero x = approxEqual x 0.0
-
-let approxOne x = approxEqual x 1.0
+open Subtraktor.Tests.Utils
 
 [<Fact>]
 let ``sine at t=0 is always 0`` () =

@@ -6,6 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="EnvelopeTests.fs" />
+    <Compile Include="Utils.fs" />
     <Compile Include="OscTests.fs" />
     <Compile Include="SignalTests.fs" />
   </ItemGroup>
