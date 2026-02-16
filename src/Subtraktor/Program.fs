@@ -1,61 +1,24 @@
-﻿open System
-open System.IO
-open System.Runtime.InteropServices
-open System.Text
+﻿open FSharp.Data.UnitSystems.SI.UnitSymbols
+open Subtraktor.Signal
+open Subtraktor.Osc
+open Subtraktor.Wav
 
-[<Literal>]
-let SampleRate = 44100
+let lowPianoC = sine 32.7<Hz>
+let lowBassGuitarE = sine 41.2<Hz>
+let lowNoteOn5StringBass = sine 30.9<Hz>
+let osc = sine 200.0<Hz>
 
-let writeWavMono16 (path: string) (sampleRate: int) (samples: int16[]) =
-    let numChannels = 1s
-    let bitsPerSample = 16s
-    let blockAlign = int16 (int numChannels * int bitsPerSample / 8)
-    let byteRate = sampleRate * int blockAlign
-    let dataSizeBytes = samples.Length * sizeof<int16>
-    let riffSize = 36 + dataSizeBytes
-    
-    use fs = new FileStream(path, FileMode.Create)
-    use bw = new BinaryWriter(fs, Encoding.ASCII)
-    
-    let writeAscii (s: string) = bw.Write(Encoding.ASCII.GetBytes(s))
-    
-    writeAscii "RIFF"
-    bw.Write(riffSize)
-    writeAscii "WAVE"
-    
-    writeAscii "fmt "
-    bw.Write(16)
-    bw.Write(int16 1)
-    bw.Write(numChannels)
-    bw.Write(sampleRate)
-    bw.Write(byteRate)
-    bw.Write(blockAlign)
-    bw.Write(bitsPerSample)
-    
-    writeAscii "data"
-    bw.Write(dataSizeBytes)
-    bw.Write(MemoryMarshal.AsBytes(samples.AsSpan()))
-    
-let secondsToSamples (sampleRate: int) (seconds: float) =
-    int (Math.Round(seconds * float sampleRate))
+let c3 = sine 130.81<Hz>
+let d3 = sine 146.83<Hz>
+let e3 = sine 164.81<Hz>
+let f3 = sine 174.61<Hz>
+let g3 = sine 196.0<Hz>
 
-let floatToPcm16 (x: float) =
-    let xClamped = max -1.0 (min 1.0 x)
-    int16 (Math.Round(xClamped * 32767.0))
+// c3 |> render 44100.0<Hz> 5.0<s> |> writeWav "d:/temp/c3.wav" 44100.0<Hz>
+// d3 |> render 44100.0<Hz> 5.0<s> |> writeWav "d:/temp/d3.wav" 44100.0<Hz>
+// e3 |> render 44100.0<Hz> 5.0<s> |> writeWav "d:/temp/e3.wav" 44100.0<Hz>
+// f3 |> render 44100.0<Hz> 5.0<s> |> writeWav "d:/temp/f3.wav" 44100.0<Hz>
+// g3 |> render 44100.0<Hz> 5.0<s> |> writeWav "d:/temp/g3.wav" 44100.0<Hz>
+//
 
-[<EntryPoint>]
-let main _argv =
-    let durationSec = 2.0
-    let n = secondsToSamples SampleRate durationSec
-    
-    let freqHz = 440.0
-    let amplitude = 0.2
-    
-    let samples : int16[] =
-        Array.init n (fun i ->
-            let t = float i / float SampleRate
-            let x = amplitude * Math.Sin(2.0 * Math.PI * freqHz * t)
-            floatToPcm16 x)
-        
-    writeWavMono16 "some/path/sine.wav" SampleRate samples    
-    0
+g
