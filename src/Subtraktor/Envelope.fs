@@ -4,6 +4,8 @@ open FSharp.Data.UnitSystems.SI.UnitSymbols
 open Subtraktor.Units
 open Subtraktor.Signal
 
+type Envelope = float<s> -> float
+
 /// <summary>
 /// Creates a simple attack–decay (AD) amplitude envelope.
 /// </summary>
@@ -35,7 +37,7 @@ open Subtraktor.Signal
 /// <returns>
 /// An envelope function mapping <c>Time</c> to amplitude in the range [0.0, 1.0].
 /// </returns>
-let ad (attack: Time) (decay: Time)=
+let ad (attack: Time) (decay: Time) : Envelope =
     fun (t: float<s>) ->
         if t < attack then
             float (t / attack)

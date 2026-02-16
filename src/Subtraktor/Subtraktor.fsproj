@@ -8,6 +8,7 @@
   <ItemGroup>
     <Compile Include="Units.fs" />
     <Compile Include="Signal.fs" />
+    <Compile Include="Gate.fs" />
     <Compile Include="Osc.fs" />
     <Compile Include="Wav.fs" />
     <Compile Include="Envelope.fs" />

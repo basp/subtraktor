@@ -3,9 +3,6 @@
 open System.IO
 open Subtraktor.Units
 
-let encodePcm16alt (samples: float[]) : byte[] =
-    failwith "Not implemented"
-
 let encodePcm16 (samples: float[]) : byte[] =
     let clamp x =
         if x > 1.0 then 1.0
