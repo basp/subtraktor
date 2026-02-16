@@ -26,6 +26,10 @@ deliberate, every line of code considered, and every abstraction justified.
 It’s a synthesizer built with restraint, curiosity, and craftsmanship—one that 
 grows slowly, intentionally, and with a clear sense of purpose.
 
+### Why?
+Subtractive synthesis is one of the clearest ways to understand sound design.
+Subtraktor aims to make that clarity visible in code.
+
 ## Philosophy
 * Simplicity without compromise.
 * Composability as a first-class idea.
@@ -33,6 +37,19 @@ grows slowly, intentionally, and with a clear sense of purpose.
 * Minimalism with maximal impact.
 * Craftsmanship over convenience.
 * Transparency in design and implementation.
+
+Subtraktor is built on the belief that small, pure functions can model complex 
+sound behavior. Every abstraction must earn its place. Every function must be 
+easy to reason about.
+
+## Example
+```fsharp
+open Subtraktor.Signal
+open Subtraktor.Osc
+
+let osc = sine 440.0<Hz>
+let samples = osc |> render 44100.0<Hz> 1.0<s>
+```
 
 ## Roadmap
 Subtraktor will grow slowly and intentionally. Each milestone focuses on depth, 
