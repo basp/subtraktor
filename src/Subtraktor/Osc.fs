@@ -11,7 +11,7 @@ open Subtraktor.Signal
 /// <para>
 /// A sine oscillator produces the simplest possible periodic waveform: a
 /// smooth, single‑frequency tone with no harmonics. It is the mathematical
-/// foundation of all subtractive synthesis, and serves as a building block for
+/// foundation of all subtractive synthesis and serves as a building block for
 /// more complex signals.
 /// </para>
 /// <para>
@@ -22,5 +22,16 @@ open Subtraktor.Signal
 /// </para>
 /// </remarks>
 let sine (freq: Frequency) : Signal =
-    fun t -> sin (2.0 * Math.PI * float freq * float t)
+    fun (t: Time) ->
+        sin (2.0 * Math.PI * float freq * float t)
     
+let saw (freq: Frequency) : Signal =
+    fun (t: Time) ->
+        let phase = float freq * float t
+        2.0 * (phase - floor phase) - 1.0
+        
+let square (freq: Frequency) : Signal =
+    fun (t: Time) ->
+        let phase = float freq * float t
+        if (phase - floor phase) < 0.5 then 1.0
+        else -1.0
