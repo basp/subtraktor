@@ -1,7 +1,9 @@
 ﻿open FSharp.Data.UnitSystems.SI.UnitSymbols
+open Subtraktor
 open Subtraktor.Signal
 open Subtraktor.Osc
 open Subtraktor.Wav
+open Subtraktor.Envelope
 
 let lowPianoC = sine 32.7<Hz>
 let lowBassGuitarE = sine 41.2<Hz>
@@ -19,6 +21,8 @@ let g3 = sine 196.0<Hz>
 // e3 |> render 44100.0<Hz> 5.0<s> |> writeWav "d:/temp/e3.wav" 44100.0<Hz>
 // f3 |> render 44100.0<Hz> 5.0<s> |> writeWav "d:/temp/f3.wav" 44100.0<Hz>
 // g3 |> render 44100.0<Hz> 5.0<s> |> writeWav "d:/temp/g3.wav" 44100.0<Hz>
-//
 
-g
+add e3 g3
+|> withEnvelope (ad 2.0<s> 3.0<s>)
+|> render 44100.0<Hz> 5.0<s>
+|> writeWav "d:/temp/ad.wav" 44100.0<Hz>

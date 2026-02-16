@@ -12,7 +12,7 @@ open Subtraktor.Units
 /// <b>no side effects</b>. For the same input time, it always returns the same
 /// output value.
 /// </remarks>
-type Signal = float<s> -> float
+type Signal = Time -> float
 
 /// <summary>
 /// Creates a signal that always returns the same amplitude, regardless of
@@ -139,8 +139,8 @@ let apply (f: Signal -> Signal) (s: Signal) : Signal =
 /// </para>
 /// </remarks>
 let render
-    (sampleRate: float<Hz>)
-    (duration: float<s>)
+    (sampleRate: SampleRate)
+    (duration: Time)
     (signal: Signal) : float[] =
         let sampleCount = int (duration * sampleRate)
         let sample i = (float (i * 1<samples>) / sampleRate)

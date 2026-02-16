@@ -10,6 +10,7 @@
     <Compile Include="Signal.fs" />
     <Compile Include="Osc.fs" />
     <Compile Include="Wav.fs" />
+    <Compile Include="Envelope.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
