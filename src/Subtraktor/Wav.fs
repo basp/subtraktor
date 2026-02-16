@@ -1,7 +1,7 @@
 ﻿module Subtraktor.Wav
 
 open System.IO
-open FSharp.Data.UnitSystems.SI.UnitSymbols
+open Subtraktor.Units
 
 let encodePcm16alt (samples: float[]) : byte[] =
     failwith "Not implemented"
@@ -34,7 +34,7 @@ let encodePcm16 (samples: float[]) : byte[] =
     
     pcm
     
-let buildHeader (sampleRate: float<Hz>) (dataSize: int) : byte[] =
+let buildHeader (sampleRate: SampleRate) (dataSize: int) : byte[] =
     let fmtHeaderSize = 16
     let format = 1 // PCM
     let channels = 1
@@ -100,7 +100,7 @@ let buildHeader (sampleRate: float<Hz>) (dataSize: int) : byte[] =
 
     header
     
-let writeWav (path: string) (rate: float<Hz>) (samples: float[]): unit =
+let writeWav path rate samples =
     let pcm = encodePcm16 samples
     let header = buildHeader rate pcm.Length
     use stream = new FileStream(path, FileMode.Create)

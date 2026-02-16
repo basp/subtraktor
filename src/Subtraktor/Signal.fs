@@ -1,6 +1,5 @@
 ﻿module Subtraktor.Signal
 
-open FSharp.Data.UnitSystems.SI.UnitSymbols
 open Subtraktor.Units
 
 /// <summary>

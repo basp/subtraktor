@@ -1,8 +1,7 @@
 ﻿module Subtraktor.Osc
 
-open FSharp.Data.UnitSystems.SI.UnitSymbols
-
 open System
+open Subtraktor.Units
 open Subtraktor.Signal
 
 /// <summary>
@@ -22,6 +21,6 @@ open Subtraktor.Signal
 /// at the same time always yields the same amplitude.
 /// </para>
 /// </remarks>
-let sine (freq: float<Hz>) : Signal =
+let sine (freq: Frequency) : Signal =
     fun t -> sin (2.0 * Math.PI * float freq * float t)
     
