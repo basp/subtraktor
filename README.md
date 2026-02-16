@@ -76,6 +76,18 @@ let samples =
     |> render 44100.0<Hz> 1.0<s>
 ```
 
+### Envelope
+```fsharp
+let e3 = sine 164.81<Hz>
+let g3 = sine 196.0<Hz>
+
+add e3 g3
+// (2s attack, 3s decay)
+|> withEnvelope (ad 2.0<s> 3.0<s>) 
+|> render 44100.0<Hz> 5.0<s>
+|> writeWav "some/path/ad.wav" 44100.0<Hz>
+```
+
 ## Roadmap
 Subtraktor will grow slowly and intentionally. Each milestone focuses on depth, 
 clarity, and refinement rather than feature accumulation. This roadmap is a 
