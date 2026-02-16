@@ -23,8 +23,8 @@ features, it focuses on refining the essentials: improving the quality,
 clarity, and expressiveness of the core signal path. Every addition is 
 deliberate, every line of code considered, and every abstraction justified.
 
-It’s a synthesizer built with restraint, curiosity, and craftsmanship—one that 
-grows slowly, intentionally, and with a clear sense of purpose.
+It’s a synthesizer built with restraint, curiosity, and craftsmanship — one 
+that grows slowly, intentionally, and with a clear sense of purpose.
 
 ### Why?
 Subtractive synthesis is one of the clearest ways to understand sound design.
@@ -42,13 +42,38 @@ Subtraktor is built on the belief that small, pure functions can model complex
 sound behavior. Every abstraction must earn its place. Every function must be 
 easy to reason about.
 
-## Example
+## Examples
+### Basic sine wave
 ```fsharp
 open Subtraktor.Signal
 open Subtraktor.Osc
 
 let osc = sine 440.0<Hz>
-let samples = osc |> render 44100.0<Hz> 1.0<s>
+
+let samples =
+    osc
+    |> render 44100.0<Hz> 1.0<s>
+```
+
+### Combinators
+```fsharp
+open Subtraktor.Signal
+open Subtraktor.Osc
+
+// Two oscillators: a fundamental and a quieter fifth
+let fundamental = sine 220.0<Hz>
+let fifth       = sine 330.0<Hz> |> scale 0.5
+
+// Combine them into a simple harmonic tone
+let tone =
+    fundamental
+    |> add fifth
+    |> scale 0.8   // overall gain
+
+// Render one second of audio at 44.1 kHz
+let samples =
+    tone
+    |> render 44100.0<Hz> 1.0<s>
 ```
 
 ## Roadmap
