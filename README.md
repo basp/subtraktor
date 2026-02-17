@@ -159,11 +159,11 @@ about those but some of the envelopes and filters might carry state. The
 exposed API is designed to be functional but it's good to be aware when
 combinators might have side effects.
 
-Currently, the `ASR` envelope is the moving part that carries state. But it can
-be a real gotcha - not in normal usage - but especially when testing.
+Currently, the `ASR` envelope is the only moving part that carries state. But 
+it can be a real gotcha - usually not in normal usage - but when testing.
 
 For example, the following test will fail although it looks like it 
-shouldn't on first glance:
+should succeed on first glance.
 
 ```fsharp
 let gate = Gate.between 1.0<s> 4.0<s>
@@ -179,10 +179,10 @@ Assert.Equal(1.0, v, 1e-6)
 ```
 
 The problem here is that the `asr` envelope is stateful and if we invoke it
-like this it's not in the correct state, it expects to enter an attack, sustain
-and release phase but in the above example, it hasn't even hit the attack
-stage yet. So when testing stateful operators like this it's better to use
-the following pattern:
+like this it's not in the correct state, it expects to enter an **attack**, 
+**sustain** and **release** phase but in the above example, it hasn't even hit 
+the attack stage yet. So when testing stateful operators like this it's better 
+to use the following pattern (and force the combinator into the correct state):
 
 ```fsharp
 [<Fact>] let ``sustain phase holds at 1`` () = 
@@ -243,6 +243,8 @@ philosophy:
 **Goal:** only expand when it strengthens the core experience.
 
 ## Aspirations
+Just some ideas for the future. Nothing set in stone.
+
 ### Workflows
 ```fsharp
 let patch =
@@ -253,5 +255,18 @@ let patch =
         let! modFreq = osc |> Signal.add lfo
         let! shaped = modFreq * env
         return shaped
+    }
+```
+
+Or a slightly more advanced dream:
+```fsharp
+let patch = dsp {
+        use! osc1 = Osc.saw freq
+        use! osc2 = Osc.square (freq * 2.0)
+        use! env = Env.adsr gate adsrParams
+        use! lfo = Lfo.triangle 0.5<Hz>
+        let! cutoff = Signal.constant 800.0 |> Signal.add (lfo * 200.0)
+        let! mixed = Mix.two osc1 osc2 0.5
+        let! filtered = Filter.lowpass cutoff mixed return filtered * env
     }
 ```
