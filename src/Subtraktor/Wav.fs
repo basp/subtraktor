@@ -3,7 +3,7 @@
 open System.IO
 open Subtraktor.Units
 
-let encodePcm16 (samples: float[]) : byte[] =
+let private encodePcm16 (samples: float[]) : byte[] =
     let clamp x =
         if x > 1.0 then 1.0
         else if x < -1.0 then -1.0
@@ -31,7 +31,7 @@ let encodePcm16 (samples: float[]) : byte[] =
     
     pcm
     
-let buildHeader (sampleRate: SampleRate) (dataSize: int) : byte[] =
+let private buildHeader (sampleRate: SampleRate) (dataSize: int) : byte[] =
     let fmtHeaderSize = 16
     let format = 1 // PCM
     let channels = 1
@@ -97,7 +97,7 @@ let buildHeader (sampleRate: SampleRate) (dataSize: int) : byte[] =
 
     header
     
-let writeWav path rate samples =
+let write path rate samples =
     let pcm = encodePcm16 samples
     let header = buildHeader rate pcm.Length
     use stream = new FileStream(path, FileMode.Create)

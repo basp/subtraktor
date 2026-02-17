@@ -1,10 +1,4 @@
 ﻿open FSharp.Data.UnitSystems.SI.UnitSymbols
-// open Subtraktor.Signal
-// open Subtraktor.Gate
-// open Subtraktor.Osc
-// open Subtraktor.Wav
-// open Subtraktor.Envelope
-// open Subtraktor.Filter
 
 open Subtraktor
 
@@ -37,4 +31,4 @@ let signal =
 signal
 |> Env.apply env
 |> Signal.render 44100.0<Hz> 5.0<s>
-|> Wav.writeWav "d:/temp/asr.wav" 44100.0<Hz>
+|> Wav.write "d:/temp/asr.wav" 44100.0<Hz>
