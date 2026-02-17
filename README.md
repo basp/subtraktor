@@ -110,6 +110,19 @@ Subtraktor itself doesn't depend on any external libraries but it does offer
 some visualization help in the `Viz` module. Below is an example that uses [Plotly.NET](https://plotly.net/) in a 
 script file. This example assumes the script contains 
 `#r "nuget: Plotly.NET, 5.0.0"` (or similar) and omits all the `#load` instructions for brevity.
+
+#### Basic LFOs
+```fsharp
+let sine = Osc.sine 1.0<Hz> |> Viz.sample 44100.0<Hz> 5.0<s>
+let triangle = Osc.triangle 1.0<Hz> |> Viz.sample 44100.0<Hz> 5.0<s>
+Chart.combine [
+    Chart.Line sine
+    Chart.Line triangle
+]
+|> Chart.show
+```
+
+#### Gates and envelopes
 ```fsharp
 // Sample rate.
 let sr = 44100.0<Hz>

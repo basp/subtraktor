@@ -2,7 +2,6 @@
 
 open System
 open Subtraktor.Units
-open Subtraktor.Signal
 
 /// <summary>
 /// Generates a pure sine‑wave oscillator at the given frequency.
@@ -35,3 +34,13 @@ let square (freq: Frequency) : Signal =
         let phase = float freq * float t
         if (phase - floor phase) < 0.5 then 1.0
         else -1.0
+        
+let private phase (freq: Frequency) (t: Time) =
+    let f = float freq
+    let x = (float t * f) % 1.0
+    if x < 0.0 then x + 1.0 else x
+    
+let triangle (freq: Frequency) : Signal =
+    fun t ->
+        let x = phase freq t
+        2.0 * abs (2.0 * x - 1.0) - 1.0

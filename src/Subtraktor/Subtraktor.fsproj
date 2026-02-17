@@ -16,6 +16,7 @@
     <Compile Include="Viz.fs" />
     <Compile Include="Program.fs" />
     <None Include="Sandbox.fsx" />
+    <Compile Include="Lfo.fs" />
   </ItemGroup>
 
 </Project>

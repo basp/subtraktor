@@ -62,4 +62,18 @@ let example2 () =
     ]
     |> Chart.show
     
-example2 ()
+let example3 () =
+    let lfo =
+        Osc.sine 1.0<Hz>
+        |> Viz.sample 44100.0<Hz> 5.0<s>
+    let triangle =
+        Osc.triangle 1.0<Hz>
+        |> Viz.sample 44100.0<Hz> 5.0<s>
+    Chart.combine [
+        Chart.Line lfo
+        Chart.Line triangle
+    ]
+    |> Chart.show
+    
+example3 ()
+    
