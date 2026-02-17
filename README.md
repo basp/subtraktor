@@ -150,6 +150,9 @@ Chart.combine [
 ```
 
 ## Gotchas
+Stateful envelopes behave like real DSP components: they evolve over time 
+based on the sequence of calls.
+
 Even though Subtraktor relies on pure functions where possible, state does
 tend to creep in. The core generators are stateless, you don't have to worry
 about those but some of the envelopes and filters might carry state. The
@@ -238,3 +241,17 @@ philosophy:
 * A minimal UI or REPL‑based patching interface
 
 **Goal:** only expand when it strengthens the core experience.
+
+## Aspirations
+### Workflows
+```fsharp
+let patch =
+    dsp {
+        let! osc = Osc.saw 440.0<Hz>
+        let! lfo = Lfo.sine 5.0<Hz> |> Signal.scale 20.0<Hz>
+        let! env = Env.asr gate { Attack = 0.1<s>; Release = 0.3<s> }
+        let! modFreq = osc |> Signal.add lfo
+        let! shaped = modFreq * env
+        return shaped
+    }
+```
