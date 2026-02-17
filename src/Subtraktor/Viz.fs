@@ -1,7 +1,6 @@
 ﻿module Subtraktor.Viz
 
 open Subtraktor.Units
-open Subtraktor.Signal
 
 let sample (sr: SampleRate) (duration: Time) (signal: Signal) =
     let dt = 1.0 / sr

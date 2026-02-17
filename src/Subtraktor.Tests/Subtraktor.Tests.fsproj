@@ -6,8 +6,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="EnvTests.fs" />
     <Compile Include="Utils.fs" />
+    <Compile Include="AdTests.fs" />
+    <Compile Include="AsrTests.fs" />
     <Compile Include="OscTests.fs" />
     <Compile Include="SignalTests.fs" />
   </ItemGroup>

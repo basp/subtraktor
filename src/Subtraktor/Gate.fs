@@ -1,6 +1,5 @@
 ﻿namespace Subtraktor
 
-open Subtraktor.Signal
 open Subtraktor.Units
         
 type Gate = Time -> bool

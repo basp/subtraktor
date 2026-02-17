@@ -1,7 +1,5 @@
 ﻿module Subtraktor.Tests.Utils
 
-open Xunit
-
 let approxEqual x y =    
     let closeEnough = 1e-6
     abs (x - y) < closeEnough   

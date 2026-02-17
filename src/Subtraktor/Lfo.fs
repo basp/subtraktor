@@ -5,8 +5,8 @@ open Subtraktor.Units
 let sine (freq: Frequency) : Signal =
     Osc.sine freq
 
-// let triangle (freq: Frequency) : Signal =
-//     Osc.triangle freq
+let triangle (freq: Frequency) : Signal =
+    Osc.triangle freq
     
 let square (freq: Frequency) : Signal =
     Osc.square freq

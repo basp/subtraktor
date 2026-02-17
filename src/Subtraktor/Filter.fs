@@ -5,7 +5,6 @@
 // Subtraktor’s philosophy embraces rawness.
 
 open System
-open Signal
 open Units
 
 let lowpass (cutoff: Frequency) (sampleRate: SampleRate) (signal: Signal) : Signal =
