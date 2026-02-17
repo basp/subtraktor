@@ -105,6 +105,31 @@ add e3 g3
 |> writeWav "some/path/ad.wav" 44100.0<Hz>
 ```
 
+### Visualization
+Subtraktor itself doesn't depend on any external libraries. Below is an
+example that uses [Plotly.NET](https://plotly.net/) in a script file.
+```fsharp
+// Sample rate.
+let sr = 44100.0<Hz>
+// Duration of the signal.
+let dur = 5.0<s>    
+// Use a very low frequency saw for visualization purposes.
+let gatedSignal = Env.apply env (Osc.saw 2.0<Hz>)
+// The shape of the envelope.
+let envData = env |> Viz.sample sr dur    
+// The trigger signals of the gate.
+let gateData =
+    Viz.sample sr dur (fun t -> if gate t then 1.0 else 0.0)
+// The actual signal, confined to the envelope.
+let sigData = gatedSignal |> Viz.sample sr dur
+Chart.combine [
+    Chart.Line envData
+    Chart.Line gateData
+    Chart.Line sigData
+]
+|> Chart.show
+```
+
 ## Roadmap
 Subtraktor will grow slowly and intentionally. Each milestone focuses on depth, 
 clarity, and refinement rather than feature accumulation. This roadmap is a 

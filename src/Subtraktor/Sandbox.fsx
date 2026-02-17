@@ -14,15 +14,19 @@ open Subtraktor
 
 open Plotly.NET
 
+// Sets up two "triggers" - one at the start of the envelope and one 3s after.
 let gate =
     Gate.between 0.0<s> 3.0<s>   
 
+// Sets up a simple ASR envelope using the gate defined above.
+// Attack phase duration is 2s, release phase duration is 1s.
 let env =
     Env.``asr`` gate {
         Attack = 2.0<s>
         Release = 1.0<s>
     }
 
+// Visualizes the envelope.
 let example1 () =
     let data =
         env
@@ -32,14 +36,21 @@ let example1 () =
     |> Chart.Line
     |> Chart.show
 
+// Visualizes the envelope, gate and the signal.
 let example2 () =
-    let gatedSignal = Env.apply env (Osc.saw 2.0<Hz>)
+    // Sample rate.
     let sr = 44100.0<Hz>
-    let dur = 5.0<s>
-    let envData = Viz.sample sr dur env
+    // Duration of the signal.
+    let dur = 5.0<s>    
+    // Use a very low frequency saw for visualization purposes.
+    let gatedSignal = Env.apply env (Osc.saw 2.0<Hz>)
+    // The shape of the envelope.
+    let envData = env |> Viz.sample sr dur    
+    // The trigger signals of the gate.
     let gateData =
         Viz.sample sr dur (fun t -> if gate t then 1.0 else 0.0)
-    let sigData = Viz.sample sr dur gatedSignal
+    // The actual signal, confined to the envelope.
+    let sigData = gatedSignal |> Viz.sample sr dur
     Chart.combine [
         Chart.Line envData
         Chart.Line gateData
