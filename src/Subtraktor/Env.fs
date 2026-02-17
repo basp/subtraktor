@@ -1,10 +1,10 @@
-﻿module Subtraktor.Envelope
+﻿module Subtraktor.Env
 
 open FSharp.Data.UnitSystems.SI.UnitSymbols
 open Subtraktor.Units
 open Subtraktor.Signal
 
-type Envelope = float<s> -> float
+type Env = Time -> float
 
 /// <summary>
 /// Creates a simple attack–decay (AD) amplitude envelope.
@@ -37,7 +37,7 @@ type Envelope = float<s> -> float
 /// <returns>
 /// An envelope function mapping <c>Time</c> to amplitude in the range [0.0, 1.0].
 /// </returns>
-let ad (attack: Time) (decay: Time) : Envelope =
+let ad (attack: Time) (decay: Time) : Env =
     fun (t: float<s>) ->
         if t < attack then
             float (t / attack)
@@ -80,5 +80,50 @@ let ad (attack: Time) (decay: Time) : Envelope =
 /// <returns>
 /// A new signal whose amplitude is shaped by the envelope.
 /// </returns>
-let withEnvelope (envelope: Signal) signal =
+let apply (envelope: Signal) signal =
     fun t -> signal t * envelope t
+    
+type AsrState =
+    | Idle
+    | Attack
+    | Sustain
+    | Release
+    
+type Asr =
+    { Attack : Time
+      Release : Time }
+    
+let ``asr`` (gate: Gate) (env: Asr) : Signal =
+    let mutable state = Idle
+    let mutable lastGate = false
+    let mutable attackStart = 0.0<s>
+    let mutable releaseStart = 0.0<s>
+    
+    fun t ->
+        let newGate = gate t
+        match lastGate, newGate with
+        | false, true ->
+            state <- Attack
+            attackStart <- t
+        | true, false ->
+            state <- Release
+            releaseStart <- t
+        | _ -> ()
+        
+        lastGate <- newGate
+        
+        match state with
+        | Idle -> 0.0
+        | Attack ->
+            let x = (t - attackStart) / env.Attack
+            if x >= 1.0 then
+                state <- Sustain
+                1.0
+            else x
+        | Sustain -> 1.0
+        | Release ->
+            let x = 1.0 - (t - releaseStart) / env.Release
+            if x <= 0.0 then
+                state <- Idle
+                0.0
+            else x

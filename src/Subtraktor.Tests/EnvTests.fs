@@ -1,8 +1,8 @@
-﻿module Subtraktor.Tests.EnvelopeTests
+﻿module Subtraktor.Tests.EnvTests
 
 open FSharp.Data.UnitSystems.SI.UnitSymbols
 open Xunit
-open Subtraktor.Envelope
+open Subtraktor.Env
 
 [<Fact>]
 let ``Attack starts at 0`` () =

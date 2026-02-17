@@ -11,9 +11,11 @@
     <Compile Include="Gate.fs" />
     <Compile Include="Osc.fs" />
     <Compile Include="Wav.fs" />
-    <Compile Include="Envelope.fs" />
+    <Compile Include="Env.fs" />
     <Compile Include="Filter.fs" />
+    <Compile Include="Viz.fs" />
     <Compile Include="Program.fs" />
+    <None Include="Sandbox.fsx" />
   </ItemGroup>
 
 </Project>
