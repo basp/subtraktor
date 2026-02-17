@@ -75,5 +75,29 @@ let example3 () =
     ]
     |> Chart.show
     
-example3 ()
+let example4 () =
+    let gate = Gate.between 1.0<s> 4.0<s>
+
+    let env =
+        Env.``asr`` gate {
+            Attack = 2.0<s>
+            Release = 1.0<s>
+        }
+        
+    let data =
+        env
+        |> Viz.sample 44100.0<Hz> 6.0<s>
+        
+    Chart.Line data
+    |> Chart.show
     
+let diagnosis3 () =
+    let g1 = gate 3.5<s>
+    let g2 = gate 2.0<s>
+    let g3 = gate 1.0001<s>
+
+    printfn "Gate at 3.5 = %A" g1
+    printfn "Gate at 2.0 = %A" g2
+    printfn "Gate at 1.0001 = %A" g3
+    
+diagnosis3 ()

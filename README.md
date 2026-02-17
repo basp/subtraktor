@@ -149,6 +149,49 @@ Chart.combine [
 |> Chart.show
 ```
 
+## Gotchas
+Even though Subtraktor relies on pure functions where possible, state does
+tend to creep in. The core generators are stateless, you don't have to worry
+about those but some of the envelopes and filters might carry state. The
+exposed API is designed to be functional but it's good to be aware when
+combinators might have side effects.
+
+Currently, the `ASR` envelope is the moving part that carries state. But it can
+be a real gotcha - not in normal usage - but especially when testing.
+
+For example, the following test will fail although it looks like it 
+shouldn't on first glance:
+
+```fsharp
+let gate = Gate.between 1.0<s> 4.0<s>
+
+let env =
+    Env.``asr`` gate {
+        Attack = 2.0<s>
+        Release = 1.0<s>
+    }
+    
+let v = env 3.5<s>
+Assert.Equal(1.0, v, 1e-6)
+```
+
+The problem here is that the `asr` envelope is stateful and if we invoke it
+like this it's not in the correct state, it expects to enter an attack, sustain
+and release phase but in the above example, it hasn't even hit the attack
+stage yet. So when testing stateful operators like this it's better to use
+the following pattern:
+
+```fsharp
+[<Fact>] let ``sustain phase holds at 1`` () = 
+    // Trigger gate to ensure that the release phase starts. 
+    env 1.0<s> |> ignore 
+    env 3.0<s> |> ignore 
+    let v = env 3.5<s> 
+    Assert.Equal(1.0, v, 1e-6)
+```
+
+This will ensure that the envelope goes through the expected state changes.
+
 ## Roadmap
 Subtraktor will grow slowly and intentionally. Each milestone focuses on depth, 
 clarity, and refinement rather than feature accumulation. This roadmap is a 

@@ -31,6 +31,9 @@ let ``attack phase ramps from 0 to 1`` () =
 
 [<Fact>]
 let ``sustain phase holds at 1`` () =
-    let v = env 3.5<s>
+    // Trigger gate to ensure that the release phase starts.
+    env 1.0<s> |> ignore
+    env 3.0<s> |> ignore
     
-    Assert.True (approxEqual 1.0 v)
+    let v = env 3.5<s>
+    Assert.Equal(1.0, v, 1e-6)
