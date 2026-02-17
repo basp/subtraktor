@@ -4,7 +4,7 @@ open FSharp.Data.UnitSystems.SI.UnitSymbols
 open Subtraktor.Units
 open Subtraktor.Signal
 
-type Env = Time -> float
+type Env = Signal
 
 /// <summary>
 /// Creates a simple attack–decay (AD) amplitude envelope.

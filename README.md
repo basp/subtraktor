@@ -106,20 +106,26 @@ add e3 g3
 ```
 
 ### Visualization
-Subtraktor itself doesn't depend on any external libraries. Below is an
-example that uses [Plotly.NET](https://plotly.net/) in a script file.
+Subtraktor itself doesn't depend on any external libraries but it does offer
+some visualization help in the `Viz` module. Below is an example that uses [Plotly.NET](https://plotly.net/) in a 
+script file. This example assumes the script contains 
+`#r "nuget: Plotly.NET, 5.0.0"` (or similar) and omits all the `#load` instructions for brevity.
 ```fsharp
 // Sample rate.
 let sr = 44100.0<Hz>
 // Duration of the signal.
 let dur = 5.0<s>    
 // Use a very low frequency saw for visualization purposes.
-let gatedSignal = Env.apply env (Osc.saw 2.0<Hz>)
+let gatedSignal = Osc.saw 2.0<Hz> |> Env.apply env
 // The shape of the envelope.
 let envData = env |> Viz.sample sr dur    
 // The trigger signals of the gate.
 let gateData =
-    Viz.sample sr dur (fun t -> if gate t then 1.0 else 0.0)
+    let plot t =
+        match gate t with
+        | true -> 1.0
+        | _ -> 0.0
+    plot |> Viz.sample sr dur
 // The actual signal, confined to the envelope.
 let sigData = gatedSignal |> Viz.sample sr dur
 Chart.combine [

@@ -43,12 +43,16 @@ let example2 () =
     // Duration of the signal.
     let dur = 5.0<s>    
     // Use a very low frequency saw for visualization purposes.
-    let gatedSignal = Env.apply env (Osc.saw 2.0<Hz>)
+    let gatedSignal = Osc.saw 2.0<Hz> |> Env.apply env
     // The shape of the envelope.
     let envData = env |> Viz.sample sr dur    
     // The trigger signals of the gate.
     let gateData =
-        Viz.sample sr dur (fun t -> if gate t then 1.0 else 0.0)
+        let plot t =
+            match gate t with
+            | true -> 1.0
+            | _ -> 0.0
+        plot |> Viz.sample sr dur
     // The actual signal, confined to the envelope.
     let sigData = gatedSignal |> Viz.sample sr dur
     Chart.combine [

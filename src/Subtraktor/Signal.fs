@@ -110,6 +110,31 @@ let apply (f: Signal -> Signal) (s: Signal) : Signal =
     f s   
 
 /// <summary>
+/// Universal signal transformer.
+/// </summary>
+/// <param name="f">The transformation function.</param>
+/// <param name="s">The signal.</param>
+/// <param name="t">The time at which to transform the signal.</param>
+/// <example>
+/// <code>
+/// let clipped =
+///     signal
+///     |> Signal.map (fun x -> max -0.5 (min 0.5 x))
+/// </code>
+/// </example>
+let map (f: float -> float) (s: Signal) : Signal =
+    fun t -> f (s t)
+
+/// <summary>
+/// Shifting a signal up or down.
+/// </summary>
+/// <param name="b">The amount of bias (up or down).</param>
+/// <param name="s">The signal to which the bias will be applied.</param>
+/// <param name="t">The time at which the bias is applied.</param>
+let bias (b: float) (s: Signal) : Signal =
+    fun t -> s t + b
+
+/// <summary>
 /// Converts a <b>continuous-time signal</b> into a <b>discrete buffer of audio samples</b>.
 /// </summary>
 /// <remarks>
