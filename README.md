@@ -149,6 +149,23 @@ Chart.combine [
 |> Chart.show
 ```
 
+## Two Kinds of Signals
+Subtraktor works with two conceptual domains:
+
+### 1. Pure Signals
+These are mathematical functions of time (`Time -> float`). They are
+stateless, deterministic, and freely composable. Oscillators, mixers,
+and waveshapers all live here.
+
+### 2. Stateful Signals
+These behave like real DSP components: they evolve over time based on
+the sequence of calls. Envelopes, filters, and phase-accurate
+oscillators fall into this category. They are essential for shaping and
+modulating sound, but they require being driven through time in order.
+
+Pure signals can be sampled at arbitrary times. Stateful signals must be
+evaluated sequentially, just like hardware DSP.
+
 ## Gotchas
 Stateful envelopes behave like real DSP components: they evolve over time 
 based on the sequence of calls.

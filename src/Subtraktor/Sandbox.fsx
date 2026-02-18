@@ -115,7 +115,7 @@ let ``classic subtractive bass`` () =
     let gate = Gate.between 0.5<s> 1.5<s>
     
     let env = Env.``asr`` gate {
-        Attack = 0.01<s>
+        Attack = 0.2<s>
         Release = 0.2<s>
     }
     

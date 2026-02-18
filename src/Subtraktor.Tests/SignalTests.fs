@@ -53,7 +53,7 @@ let ``apply enables left-to-right signal flow`` () =
 
 [<Fact>]
 let ``apply makes higher-order composition readable`` () =
-    // A reusable transformation pipeline
+    // A reusable transformation pipe line
     let transform =
         apply (scale 3.0)
         >> apply (add (constant -1.0))
