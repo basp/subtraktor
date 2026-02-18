@@ -3,12 +3,12 @@
 open Subtraktor
 open Subtraktor.Units
             
-type Edge =
+type Trend =
     | Rising
     | Falling
     | Stable
         
-let direction (s: Signal) =
+let trend (s: Signal) =
     let mutable previous = 0.0
     fun t ->
         let current = s t
@@ -19,13 +19,23 @@ let direction (s: Signal) =
         previous <- current
         edge
 
+let toSignal (trend: Trend) : Signal =
+    match trend with
+    | Rising -> fun _ -> 1.0
+    | Falling -> fun _ -> -1.0
+    | Stable -> fun _ -> 0.0
+
 let isRising s t =
-    match direction s t with
+    match trend s t with
     | Rising -> true
     | _ -> false
     
 let isFalling s t =
-    match direction s t with
+    match trend s t with
     | Falling -> true
     | _ -> false
     
+let between (up: Time) (down: Time) : Signal =
+    fun t ->
+        if t >= up && t < down then 1.0
+        else 0.0
