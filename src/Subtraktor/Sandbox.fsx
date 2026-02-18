@@ -91,13 +91,44 @@ let example4 () =
     Chart.Line data
     |> Chart.show
     
-let diagnosis3 () =
-    let g1 = gate 3.5<s>
-    let g2 = gate 2.0<s>
-    let g3 = gate 1.0001<s>
+let example5 () =
+    let gate = Gate.between 0.5<s> 1.5<s>
 
-    printfn "Gate at 3.5 = %A" g1
-    printfn "Gate at 2.0 = %A" g2
-    printfn "Gate at 1.0001 = %A" g3
+    let env =
+        Env.``asr`` gate {
+            Attack = 2.0<s>
+            Release = 1.0<s>
+        }
+        
+    let osc = Osc.saw 110.0<Hz>
+
+    let patch = Signal.mul env osc
     
-diagnosis3 ()
+    let data =
+        patch
+        |> Viz.sample 44100.0<Hz> 6.0<s>
+        
+    Chart.Line data
+    |> Chart.show
+    
+let ``classic subtractive bass`` () =
+    let gate = Gate.between 0.5<s> 1.5<s>
+    
+    let env = Env.``asr`` gate {
+        Attack = 0.01<s>
+        Release = 0.2<s>
+    }
+    
+    let osc = Osc.saw 110.0<Hz>
+    let patch = Signal.mul osc env
+    
+    // patch
+    // |> Viz.sample 44100.0<Hz> 2.0<s>
+    // |> Chart.Line
+    // |> Chart.show
+    
+    patch
+    |> Signal.render 44100.0<Hz> 2.0<s>
+    |> Wav.write "d:/temp/sb.wav" 44100.0<Hz>
+    
+``classic subtractive bass`` ()    

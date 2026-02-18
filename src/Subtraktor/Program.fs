@@ -33,21 +33,60 @@ open Subtraktor
 // |> Signal.render 44100.0<Hz> 5.0<s>
 // |> Wav.write "d:/temp/asr.wav" 44100.0<Hz>
 
-let gate = Gate.between 1.0<s> 4.0<s>
+let patch1 () =
+    let gate = Gate.between 0.0<s> 3.5<s>
 
-let env =
-    Env.``asr`` gate {
-        Attack = 2.0<s>
-        Release = 1.0<s>
-    }
+    let env =
+        Env.``asr`` gate {
+            Attack = 1.5<s>
+            Release = 1.5<s>
+        }
+        
+    let osc = Osc.saw 110.0<Hz>
 
-let diagnosis3 () =
-    let g1 = gate 3.5<s>
-    let g2 = gate 2.0<s>
-    let g3 = gate 1.0001<s>
+    let patch = Signal.mul env osc
 
-    printfn "Gate at 3.5 = %A" g1
-    printfn "Gate at 2.0 = %A" g2
-    printfn "Gate at 1.0001 = %A" g3
+    patch
+    |> Signal.render 44100.0<Hz> 5.0<s>
+    |> Wav.write "d:/temp/patch1.wav" 44100.0<Hz>
     
-diagnosis3 ()
+let patch2 () =
+    let gate = Gate.between 0.0<s> 4.0<s>
+    
+    let env =
+        Env.``asr`` gate {
+            Attack = 1.5<s>
+            Release = 1.5<s>
+        }
+        
+    let osc1 = Osc.saw 220.0<Hz>
+    let osc2 = Osc.saw 221.5<Hz>
+    
+    let patch = Signal.mul (Signal.add osc1 osc2) env
+    
+    patch
+    |> Signal.render 44100.0<Hz> 5.0<s>
+    |> Wav.write "d:/temp/patch2.wav" 44100.0<Hz>    
+
+let patch3 () =
+    let lfo =
+        Lfo.sine 5.0<Hz>
+        |> Signal.scale 3.0
+
+    let gate = Gate.between 0.0<s> 4.0<s>
+          
+    let env =
+        Env.``asr`` gate {
+            Attack = 1.5<s>
+            Release = 1.5<s>
+        }     
+        
+    let patch =
+        Osc.saw 440.0<Hz>
+        |> Signal.add lfo
+        |> Env.apply env
+
+    patch
+    |> Signal.render 44100.0<Hz> 5.0<s>
+    |> Wav.write "d:/temp/patch3.wav" 44100.0<Hz>
+   

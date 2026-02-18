@@ -153,17 +153,16 @@ Chart.combine [
 Stateful envelopes behave like real DSP components: they evolve over time 
 based on the sequence of calls.
 
-Even though Subtraktor relies on pure functions where possible, state does
-tend to creep in. The core generators are stateless, you don't have to worry
-about those but some of the envelopes and filters might carry state. The
-exposed API is designed to be functional but it's good to be aware when
-combinators might have side effects.
+Even though Subtraktor relies on pure functions where possible, state does tend
+to creep in. The core generators are stateless — you don’t have to worry about
+those — but some envelopes and filters carry internal state. The public API is
+designed to feel functional, but it’s good to be aware when a combinator has
+side effects.
 
 Currently, the `ASR` envelope is the only moving part that carries state. But 
-it can be a real gotcha - usually not in normal usage - but when testing.
-
-For example, the following test will fail although it looks like it 
-should succeed on first glance.
+it can be a real gotcha - usually not in normal usage - but when testing. For 
+example, the following test will fail although it looks like it should succeed 
+on first glance.
 
 ```fsharp
 let gate = Gate.between 1.0<s> 4.0<s>
