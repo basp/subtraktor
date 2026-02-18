@@ -120,15 +120,21 @@ let ``classic subtractive bass`` () =
     }
     
     let osc = Osc.saw 110.0<Hz>
-    let patch = Signal.mul osc env
-    
-    // patch
-    // |> Viz.sample 44100.0<Hz> 2.0<s>
-    // |> Chart.Line
-    // |> Chart.show
+    let patch = Signal.mul env osc
     
     patch
-    |> Signal.render 44100.0<Hz> 2.0<s>
-    |> Wav.write "d:/temp/sb.wav" 44100.0<Hz>
+    |> Viz.sample 44100.0<Hz> 2.0<s>
+    |> Chart.Line
+    |> Chart.show
     
-``classic subtractive bass`` ()    
+    // patch
+    // |> Signal.render 44100.0<Hz> 2.0<s>
+    // |> Wav.write "d:/temp/sb.wav" 44100.0<Hz>
+    
+let ``cutoff example`` () =
+    let cutoff =
+        Osc.triangle 0.25<Hz>
+        |> Signal.scale 800.0
+        |> Signal.bias 1200.0
+
+    let filtered = Filter.lowpass cutoff signal
