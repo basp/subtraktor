@@ -5,8 +5,8 @@ open Subtraktor
 let example () =
     let osc1 = Signal.saw 55.0<Hz>
     let osc2 = Signal.saw 110.0<Hz> |> Signal.scale 0.7
-    let osc3 = Signal.saw 220.0<Hz> |> Signal.scale 0.5
-    let osc4 = Signal.saw 440.0<Hz> |> Signal.scale 0.2
+    let osc3 = Signal.square 220.0<Hz> |> Signal.scale 0.5
+    let osc4 = Signal.triangle 440.0<Hz> |> Signal.scale 0.2
     
     let mixed =
         osc1
@@ -23,5 +23,5 @@ let example () =
     mixed
     |> Signal.scale 0.73
     |> render 44100.0<Hz>
-
+ 
 example ()

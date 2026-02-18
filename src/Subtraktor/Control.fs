@@ -1,25 +1,31 @@
 ﻿module Subtraktor.Control
     
-// val rising : Signal -> (Time -> bool)
-// val falling : Signal -> (Time -> bool)
-// val gate : Time -> Time -> Signal // like Gate.between
-
+open Subtraktor
 open Subtraktor.Units
             
-let isRisingEdge (s: Signal) =
+type Edge =
+    | Rising
+    | Falling
+    | Stable
+        
+let direction (s: Signal) =
     let mutable previous = 0.0
     fun t ->
         let current = s t
-        let isRising = previous < 0.5 && current >= 0.5
+        let edge =
+            if previous < 0.5 && current >= 0.5 then Rising
+            elif previous >= 0.5 && current < 0.5 then Falling
+            else Stable
         previous <- current
-        isRising
-    
-let isFallingEdge (s: Signal) =
-    let mutable previous = 0.0
-    fun t ->
-        let current = s t
-        let isFalling = previous >= 0.5 && current < 0.5        
-        previous <- current
+        edge
 
-let gate (t0: Time) (t1: Time) =
-    ()
+let isRising s t =
+    match direction s t with
+    | Rising -> true
+    | _ -> false
+    
+let isFalling s t =
+    match direction s t with
+    | Falling -> true
+    | _ -> false
+    

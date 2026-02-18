@@ -55,6 +55,7 @@ module Signal =
                 if x < 0.0 then x + 1.0
                 else x            
             2.0 * abs (2.0 * phase - 1.0) - 1.0
+            
     let sample (rate: SampleRate) (duration: Time) (signal: Signal) =
         let dt = 1.0 / rate
         let samples = int (duration / dt)
