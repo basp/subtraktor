@@ -1,180 +1,64 @@
 ﻿namespace Subtraktor
 
+open System
 open Subtraktor.Units
 
-/// <summary>
-/// Represents a <b>continuous-time audio signal</b>.
-/// Given a time value in <b>seconds</b>, it samples amplitude.
-/// </summary>
-/// <remarks>
-/// A <c>Signal</c> is pure and from a client perspective has
-/// <b>no side effects</b>. For the same input time, it always returns the same
-/// output value.
-/// </remarks>
 type Signal = Time -> float
 
 module Signal =
-    /// <summary>
-    /// Universal signal transformer.
-    /// </summary>
-    /// <param name="f">The transformation function.</param>
-    /// <param name="s">The signal.</param>
-    /// <param name="t">The time at which to transform the signal.</param>
-    /// <example>
-    /// <code>
-    /// let clipped =
-    ///     signal
-    ///     |> Signal.map (fun x -> max -0.5 (min 0.5 x))
-    /// </code>
-    /// </example>
     let map (f: float -> float) (s: Signal) : Signal =
         fun t -> f (s t)
     
-    /// <summary>
-    /// Multiplies a signal’s amplitude by a constant factor.
-    /// </summary>
-    /// <remarks>
-    /// <c>scale</c> adjusts the overall loudness of a signal without altering its
-    /// shape, frequency content, or phase. This is the simplest form of
-    /// gain-control.
-    /// <ul>
-    /// <li>A scale factor greater than 1 amplifies the signal</li>
-    /// <li>A factor between 0 and 1 attenuates it.</li>
-    /// <li>Negative values invert the waveform, which can be musically
-    /// meaningful in some contexts.</li>
-    /// </ul>
-    /// </remarks>    
     let scale (k: float) (s: Signal) : Signal =
         fun t -> k * s t   
 
-    /// <summary>
-    /// Shifts a signal up or down using a constant offset.
-    /// </summary>
-    /// <param name="b">The amount of bias (up or down).</param>
-    /// <param name="s">The signal to which the bias will be applied.</param>
-    /// <param name="t">The time at which the bias is applied.</param>
     let bias (b: float) (s: Signal) : Signal =
         fun t -> s t + b    
     
-    /// <summary>
-    /// Combines two signals by adding their amplitudes pointwise.
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    /// <c>add</c> models the physical superposition of sound waves: at any moment
-    /// in time, the resulting amplitude is the sum of the individual amplitudes.
-    /// This operation is pure, time-aligned, and does not introduce phase shifts
-    /// or distortion.
-    /// </para>
-    /// <para>
-    /// Because addition is associative and commutative, complex signals can be
-    /// built from simpler ones in a predictable way. Callers are responsible for
-    /// ensuring the resulting amplitude stays within a desired range (e.g., to
-    /// avoid clipping).
-    /// </para>
-    /// </remarks>
     let add (a: Signal) (b: Signal) : Signal =
         fun t -> a t + b t
     
     let mul (a: Signal) (b: Signal) : Signal =
         fun t -> a t * b t    
                    
-    /// <summary>
-    /// Mixes two signals with equal weight by averaging their amplitudes.
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    /// <c>mix</c> provides a simple, balanced blend of two signals. It is
-    /// equivalent to scaling each signal by <c>0.5</c> and adding them together,
-    /// producing a symmetric mix without favoring either input.
-    /// </para>
-    /// <para>
-    /// This combinator is intentionally minimal. More advanced mixing strategies —
-    /// such as weighted blends, equal‑power panning, or crossfades — can be built
-    /// on top of this primitive.
-    /// </para>
-    /// </remarks>    
     let mix (a: Signal) (b: Signal) : Signal =
         scale 0.5 (add a b)
     
-    /// <summary>
-    /// Applies a signal transformation in a pipeline-friendly way.
-    /// </summary>
-    /// <remarks>
-    /// The <c>apply</c> combinator is useful to make signal processing chains
-    /// read naturally from left to right. Instead of nesting function calls,
-    /// the <c>apply</c> operator allows transformations to be composed in a clear
-    /// linear style:
-    /// <example>
-    /// <code>
-    /// let signal =
-    ///     |> apply (scale 0.5)
-    ///     |> apply (add anotherSignal)
-    /// </code>
-    /// </example>
-    /// This improves readability without introducing new semantics.
-    /// Executing <c>apply f s</c> is equivalent to <c>f s</c>.
-    /// </remarks>
     let apply (f: Signal -> Signal) (s: Signal) : Signal =
         f s   
 
-    /// <summary>
-    /// Creates a signal that always returns the same amplitude, regardless of
-    /// time.
-    /// </summary>
-    /// <remarks>
-    /// <c>constant</c> is useful for constructing time‑invariant signals such as
-    /// offsets, biases, or control values. It reinforces the idea that a
-    /// <c>Signal</c> is simply a function of time: even if the time parameter is
-    /// ignored, the result is still a valid signal in the <b>Subtraktor</b> model.
-    /// </remarks>
     let constant (c: float) : Signal =
         fun _ -> c
 
-    /// <summary>
-    /// A signal that always produces zero amplitude.
-    /// </summary>
-    /// <remarks>
-    /// <c>silence</c> is the additive identity for signals: adding it to any other
-    /// signal leaves the original unchanged. It is useful as a neutral element
-    /// when building signals incrementally or conditionally.
-    /// </remarks>    
     let zero = constant 0.0
 
     let one = constant 1.0
         
-    /// <summary>
-    /// Converts a <b>continuous-time signal</b> into a <b>discrete buffer of audio samples</b>.
-    /// </summary>
-    /// <remarks>
-    /// <para>
-    /// <c>render</c> is the bridge between <b>Subtraktor’s mathematical signal
-    /// model</b> and real-world digital audio. A <c>Signal</c> represents an ideal,
-    /// continuous function of time; rendering evaluates that function at evenly
-    /// spaced time steps determined by the sample rate.
-    /// </para>
-    ///
-    /// <para>
-    /// The resulting array contains <c>duration * sampleRate</c> samples, starting
-    /// at <c>t = 0</c> seconds. Each sample is produced by calling the signal with
-    /// a time value expressed in seconds. The function is pure: rendering the same
-    /// signal with the same parameters always yields the same output.
-    ///</para>
-    ///
-    /// <para>
-    /// Constraints:
-    /// <ul>
-    /// <li><c>sampleRate</c> must be a positive frequency in Hertz.</li>
-    /// <li><c>duration</c> must be non-negative.</li>
-    /// <li>No antialiasing or band-limiting is performed; callers are responsible
-    /// for ensuring the signal is suitable for discrete sampling.</li>
-    /// </ul>
-    /// </para>
-    /// </remarks>
-    let render
-        (sampleRate: SampleRate)
-        (duration: Time)
-        (signal: Signal) : float[] =
-            let sampleCount = int (duration * sampleRate)
-            let sample i = (float (i * 1<samples>) / sampleRate)
-            Array.init sampleCount (fun i -> sample i |> signal)
+    let sine (freq: Frequency) : Signal =
+        fun t -> sin (2.0 * Math.PI * freq * t)
+
+    let saw (freq: Frequency) : Signal =
+        fun t ->
+            let phase = freq * t
+            2.0 * (phase - floor phase) - 1.0
+
+    let square (freq: Frequency) : Signal =
+        fun (t: Time) ->
+            let phase = freq * t
+            if (phase - floor phase) < 0.5 then 1.0
+            else -1.0    
+    
+    let triangle (freq: Frequency) : Signal =
+        fun t ->
+            let phase =
+                let x = (freq * t) % 1.0 
+                if x < 0.0 then x + 1.0
+                else x            
+            2.0 * abs (2.0 * phase - 1.0) - 1.0
+            
+    let sample (rate: SampleRate) (duration: Time) (signal: Signal) =
+        let dt = 1.0 / rate
+        let samples = int (duration / dt)
+        Array.init samples (fun i ->
+            let t = float i * dt
+            (t, signal t))

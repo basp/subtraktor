@@ -2,8 +2,6 @@
 
 open FSharp.Data.UnitSystems.SI.UnitSymbols
 
-[<Measure>] type samples
-
 type Time = float<s>
 
 type Frequency = float<Hz>

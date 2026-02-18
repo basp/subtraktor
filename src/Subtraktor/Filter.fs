@@ -1,13 +1,12 @@
 ﻿module Subtraktor.Filter
 
-// Right now, filters ignore the fact that Signal is a function of
-// continuous time, while the filter operates in discrete time. That’s fine —
-// Subtraktor’s philosophy embraces rawness.
-
 open System
 open Units
 
 let lowpass (cutoff: Frequency) (sampleRate: SampleRate) (signal: Signal) : Signal =
+    // Right now, filters ignore the fact that Signal is a function of
+    // continuous time, while the filter operates in discrete time. That’s fine —
+    // Subtraktor’s philosophy embraces rawness.
     let computeCoefficient () =
         let x = float cutoff / float sampleRate
         1.0 - exp (-2.0 * Math.PI * x)    

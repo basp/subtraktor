@@ -102,4 +102,4 @@ let write path rate samples =
     let header = buildHeader rate pcm.Length
     use stream = new FileStream(path, FileMode.Create)
     stream.Write(header, 0, header.Length)
-    stream.Write(pcm, 0, pcm.Length)
+    stream.Write(pcm, 0, pcm.Length)    
