@@ -11,7 +11,12 @@
     <Compile Include="Control.fs" />
     <Compile Include="Wav.fs" />
     <Compile Include="Program.fs" />
+    <None Include="PhasorExample.fsx" />
+    <None Include="Sporthish.fsx" />
     <None Include="Sandbox.fsx" />
+    <None Include="OscTest1.fsx" />
+    <None Include="Suggestions.fsx" />
+    <None Include="MoreSuggestionsA.fsx" />
   </ItemGroup>
 
 </Project>

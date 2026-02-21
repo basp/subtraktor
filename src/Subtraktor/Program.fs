@@ -1,27 +1,47 @@
-﻿open FSharp.Data.UnitSystems.SI.UnitSymbols
+﻿open System
 
 open Subtraktor
+open FSharp.Data.UnitSystems.SI.UnitSymbols
 
 let example () =
-    let osc1 = Signal.saw 55.0<Hz>
-    let osc2 = Signal.saw 110.0<Hz> |> Signal.scale 0.7
-    let osc3 = Signal.square 220.0<Hz> |> Signal.scale 0.5
-    let osc4 = Signal.triangle 440.0<Hz> |> Signal.scale 0.2
-    
-    let mixed =
-        osc1
-        |> Signal.mix osc2
-        |> Signal.mix osc3
-        |> Signal.mix osc4
-    
-    let render rate samples =
-        samples
-        |> Signal.sample rate 5.0<s>
-        |> Array.map snd
-        |> Wav.write "d:/temp/441.wav" rate
+    // let sampleRate = 44100.0
+    //
+    // let sine freq sampleRate : seq<float> =
+    //     let phaseInc = 2.0 * Math.PI * freq / sampleRate
+    //     let rec loop phase =
+    //         seq {
+    //             yield sin phase
+    //             let nextPhase = (phase + phaseInc) % (2.0 * Math.PI) 
+    //             yield! loop nextPhase
+    //         }
+    //     loop 0.0
+    //   
+    // let lfo = sine 6.0 sampleRate
+    //
+    // let modulated =
+    //     let lfoSeq = lfo
+    //     let rec loop lfoStream =
+    //         seq {
+    //             let freq = Seq.head lfoStream
+    //             yield! (sine freq sampleRate |> Seq.take 1)
+    //             yield! loop (Seq.skip 1 lfoStream)
+    //         }            
+    //     loop lfoSeq
+    //     
+    // let duration = 1.0
+    // let sampleCount = int (sampleRate * duration)
+    //
+    // let samples =
+    //     modulated
+    //     |> Seq.take sampleCount
+    //     |> Seq.toArray
+    //     
+    // samples
+    // |> Wav.write "d:/temp/test.wav" (LanguagePrimitives.FloatWithMeasure<Hz>(sampleRate))
 
-    mixed
-    |> Signal.scale 0.73
-    |> render 44100.0<Hz>
- 
-example ()
+    
+    
+    
+    ()
+    
+example () |> ignore

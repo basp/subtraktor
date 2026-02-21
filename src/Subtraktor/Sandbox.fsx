@@ -1,84 +1,68 @@
 ﻿#r "nuget: Plotly.NET, 5.0.0"
 
-#load "Units.fs"
-#load "Signal.fs"
-#load "Control.fs"
-#load "Wav.fs"
-
+open System
 open FSharp.Data.UnitSystems.SI.UnitSymbols
-open Subtraktor
 open Plotly.NET
 
-let inline (+) (a: Signal) (b: Signal) =
-    Signal.add a b
+let duration = 1.0
+
+let framerate = 1000.0
+
+let freq = 4.0
+ 
+let pi2 = 2.0 * Math.PI 
+ 
+let amp = 1.0
+
+let offset : float = 0.0
+
+let ts =
+    let n =
+        round (duration * framerate)
+        |> int
+    Array.init n (fun i -> float i / framerate) 
+ 
+let phase t f offset =
+    (pi2 * f * t + offset)
+ 
+let sine =
+    let y x = amp * sin x
+    ts
+    |> Array.map (fun t -> phase t freq offset)
+    |> Array.map y
     
-let inline (*) (a: Signal) (b: Signal) =
-    Signal.mul a b
-
-type Interp = float -> float -> float
-
-type Phase =
-    { Name: string
-      Duration: Time
-      Target: float
-      Interpolate: float -> float }   
-
-let def = [
-    { Name = "A"
-      Duration = 1.5<s>
-      Target = 1.0
-      Interpolate = id }
+let square =
+    sine
+    |> Array.map sign
     
-    { Name = "S"
-      Duration = 1.0<s>
-      Target = 0.8
-      Interpolate = fun _ -> 1.0 }
-      
-    { Name = "R"
-      Duration = 2.0<s>
-      Target = 0.0
-      Interpolate = id }
-      
-let buildEnvelope (phases: Phase list) (gate: Signal) : Signal =
-    let trend = Control.trend gate
+let saw =
+    let y x = phase x freq offset
+    ts
+    |> Array.map y
+    
+let sinusoid a t ω ϕ =
+    // ω = 2πf
+    a * sin (ω * t + ϕ)  
+    
+let phasor (framerate : float<1/s>) =    
+    let dt = 1.0 / framerate
+    let rec loop acc = seq {
+        yield acc
+        let next = (acc + dt) % 1.0<s>
+        yield! loop next
+    }
+    loop 0.0    
+    
+Chart.combine [
+    Array.zip ts saw |> Chart.Line
+    Array.zip ts sine |> Chart.Line
+    Array.zip ts square |> Chart.Line ]
+|> Chart.show
 
-    // Mutable runtime state
-    let mutable currentPhase = -1
-    let mutable phaseStartTime = 0.0<s>
-    let mutable phaseStartValue = 0.0
+// Angular velocity with measurements example.
+type [<Measure>] rad
 
-    fun t ->
-        // 1. Handle gate events
-        match trend t with
-        | Rising ->
-            currentPhase <- 0
-            phaseStartTime <- t
-            phaseStartValue <- 0.0
-
-        | Falling ->
-            // For now: ignore falling edges (AD-style behavior)
-            ()
-
-        | Stable -> ()
-
-        // 2. If no active phase, output 0
-        if currentPhase < 0 || currentPhase >= phases.Length then
-            0.0
-        else
-            let phase = phases.[currentPhase]
-
-            // 3. Compute normalized time within the phase
-            let x = (t - phaseStartTime) / phase.Duration
-
-            if x >= 1.0 then
-                // Phase finished → move to next
-                currentPhase <- currentPhase + 1
-                phaseStartTime <- t
-                phaseStartValue <- phase.Target
-                phase.Target
-            else
-                // 4. Interpolate within the phase
-                let shaped = phase.Interpolate x
-                phaseStartValue + (phase.Target - phaseStartValue) * shaped
-
-let gate = Control.between 1.0<s> 5.0<s>
+let example () =
+    let twoPi = 2.0<rad> * Math.PI
+    let f = 1.0<1/s>
+    twoPi * f
