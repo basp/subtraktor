@@ -9,36 +9,27 @@ let duration = 2.0
 
 let twoPi = 2.0 * Math.PI
 
-let private nextPhase f sampleRate prevPhase =
-    let incr = f / sampleRate
+let private nextPhase freq sampleRate prevPhase =
+    let incr = freq / sampleRate
     let p = prevPhase + incr
     p - floor p    
 
 let saw=
     let mutable phase = 0.0
-    fun f ->
-        // let incr = f / sampleRate
-        // phase <- (phase + incr)
-        // phase <- phase - floor phase
-        phase <- nextPhase f sampleRate phase
+    fun freq ->
+        phase <- nextPhase freq sampleRate phase
         (2.0 * phase) - 1.0
         
 let sine =
     let mutable phase = 0.0
-    fun f ->
-        // let incr = f / sampleRate
-        // phase <- (phase + incr)
-        // phase <- phase - floor phase
-        phase <- nextPhase f sampleRate phase
+    fun freq ->
+        phase <- nextPhase freq sampleRate phase
         sin (twoPi * phase)
         
 let square =
     let mutable phase = 0.0
-    fun f ->
-        // let incr = f / sampleRate
-        // phase <- (phase + incr)
-        // phase <- phase - floor phase
-        phase <- nextPhase f sampleRate phase
+    fun freq ->
+        phase <- nextPhase freq sampleRate phase
         if phase < 0.5 then 1.0 else -1.0
         
 let n = round (duration * sampleRate) |> int
