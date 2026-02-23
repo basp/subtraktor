@@ -24,13 +24,19 @@ type ValidationError =
     | MismatchedFormat of expected: WaveFormat * actual: WaveFormat
 
 module SampleRate =
-    let create x : Result<SampleRate, ValidationError> = Ok (SampleRate x)
+    let create x : Result<SampleRate, ValidationError> = 
+        Ok (SampleRate x)
+    
     let value (SampleRate x) = x
 
 module FrameCount =
-    let create x : Result<FrameCount, ValidationError> = Ok (FrameCount x)
+    let create x : Result<FrameCount, ValidationError> = 
+        Ok (FrameCount x)
+    
     let value (FrameCount x) = x
     
 module ChannelCount =
-    let create x : Result<ChannelCount, ValidationError> = Ok (ChannelCount x)
+    let create x : Result<ChannelCount, ValidationError> = 
+        Ok (ChannelCount x)
+    
     let value (ChannelCount x) = x
