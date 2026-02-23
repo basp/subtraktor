@@ -1,22 +1,22 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
+    <OutputType>library</OutputType>
     <TargetFramework>net10.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="Units.fs" />
-    <Compile Include="Signal.fs" />
-    <Compile Include="Control.fs" />
-    <Compile Include="Wav.fs" />
-    <Compile Include="Program.fs" />
-    <None Include="PhasorExample.fsx" />
-    <None Include="Sporthish.fsx" />
-    <None Include="Sandbox.fsx" />
-    <None Include="OscTest1.fsx" />
-    <None Include="Suggestions.fsx" />
-    <None Include="MoreSuggestionsA.fsx" />
+    <Folder Include="Interop\" />
+    <Folder Include="IO\" />
+    <Folder Include="Processing\" />
+    <Compile Include="Core.fsi" />
+    <Compile Include="Core.fs" />
+    <Compile Include="Errors.fsi" />
+    <Compile Include="Errors.fs" />
+    <Compile Include="Pipeline.fsi" />
+    <Compile Include="Pipeline.fs" />
+    <Compile Include="AudioBuffer.fsi" />
+    <Compile Include="AudioBuffer.fs" />
   </ItemGroup>
 
 </Project>
