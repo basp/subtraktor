@@ -9,8 +9,8 @@
     <Folder Include="Interop\" />
     <Folder Include="IO\" />
     <Folder Include="Processing\" />
-    <Compile Include="Core.fsi" />
-    <Compile Include="Core.fs" />
+    <Compile Include="Primitives.fsi" />
+    <Compile Include="Primitives.fs" />
     <Compile Include="Errors.fsi" />
     <Compile Include="Errors.fs" />
     <Compile Include="Pipeline.fsi" />

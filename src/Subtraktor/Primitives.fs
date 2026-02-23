@@ -1,4 +1,4 @@
-﻿namespace Subtraktor
+namespace Subtraktor
 
 type SampleRate = private SampleRate of int
 type ChannelCount = private ChannelCount of int
@@ -23,20 +23,23 @@ type ValidationError =
     | EmptyBuffer
     | MismatchedFormat of expected: WaveFormat * actual: WaveFormat
 
+[<RequireQualifiedAccess>]
 module SampleRate =
-    let create x : Result<SampleRate, ValidationError> = 
+    let create x : Result<SampleRate, ValidationError> =
         Ok (SampleRate x)
-    
+
     let value (SampleRate x) = x
 
-module FrameCount =
-    let create x : Result<FrameCount, ValidationError> = 
-        Ok (FrameCount x)
-    
-    let value (FrameCount x) = x
-    
+[<RequireQualifiedAccess>]
 module ChannelCount =
-    let create x : Result<ChannelCount, ValidationError> = 
+    let create x : Result<ChannelCount, ValidationError> =
         Ok (ChannelCount x)
-    
+
     let value (ChannelCount x) = x
+
+[<RequireQualifiedAccess>]
+module FrameCount =
+    let create x : Result<FrameCount, ValidationError> =
+        Ok (FrameCount x)
+
+    let value (FrameCount x) = x

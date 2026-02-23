@@ -27,6 +27,7 @@ type Pipeline =
       Transforms: Transform list
       Sink: Sink }
 
+[<RequireQualifiedAccess>]
 module Pipeline =
     let create source sink =
         { Source = source
