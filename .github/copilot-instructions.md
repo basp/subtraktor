@@ -10,15 +10,13 @@ applyTo '**/*.fs'
 - Use ideomatic functional style where appropriate and possible.
 
 ## General Instructions
-- Beautiful is better than ugly.
+- Slow and stead wins the race, take it step by step.
+- Provide clear insights rather than just presenting the code.
 - Explicit is better than implicit.
 - Simple is better than complex.
-- Complex is better than complicated.
 - Flat is better than nested.
 - Sparse is better than dense.
-- Readability counts.
 - Special cases aren't special enough to break the rules.
 - Although practicality beats purity.
-- Errors should never pass silently.
-- Unless explicitly silenced.
+- Errors should never pass silently unless explicitly silenced.
 - In the face of ambiguity, refuse the temptation to guess.
