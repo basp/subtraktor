@@ -294,12 +294,12 @@ If you want to go deeper:
 
 Before moving to Phase 1, verify:
 
-- [ ] You can run `00-MathTests.fsx` and see all tests pass
-- [ ] You can execute `01-Math.fsx` and understand the output
-- [ ] You can modify test values and predict results correctly
-- [ ] You understand why sample rate matters
-- [ ] You understand MIDI-to-frequency conversion
-- [ ] You understand phase accumulation in oscillators
-- [ ] You understand the dB scale
+- [x] You can run `00-MathTests.fsx` and see all tests pass
+- [x] You can execute `01-Math.fsx` and understand the output
+- [x] You can modify test values and predict results correctly
+- [x] You understand why sample rate matters
+- [x] You understand MIDI-to-frequency conversion
+- [x] You understand phase accumulation in oscillators
+- [x] You understand the dB scale
 
 If all checkboxes are ✓, you're ready for Phase 1! 🚀

@@ -125,8 +125,8 @@ assert_true condition "test name"
 ## 📖 Reading Guide
 
 ### Immediate (Next 5-10 minutes)
-- [ ] Run tests ✓ (you're doing this now)
-- [ ] Skim `QUICK_START.md` (3 min)
+- [x] Run tests ✓ (you're doing this now)
+- [x] Skim `QUICK_START.md` (3 min)
 
 ### Short Term (Next 1-2 hours)
 - [ ] Read `PHASE_0_FUNDAMENTALS.md` (45 min) ← **Start here after tests pass**

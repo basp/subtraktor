@@ -1,4 +1,4 @@
-﻿# Subtraktor Learning Progress Checklist
+﻿﻿# Subtraktor Learning Progress Checklist
 
 Use this file to track your progress through the synthesizer learning project.
 
@@ -6,14 +6,17 @@ Use this file to track your progress through the synthesizer learning project.
 
 ## Phase 0: Audio Mathematics Fundamentals
 
+### Phase Status
+- [x] Phase 0 started (24 Feb 2026)
+
 ### Setup & Initial Verification
-- [ ] Cloned/opened the project in Rider
-- [ ] Ran `dotnet build` successfully
-- [ ] Found `00-MathTests.fsx` in `Explorations/`
-- [ ] Executed tests → all 28 pass ✓
+- [x] Cloned/opened the project in Rider
+- [x] Ran `dotnet build` successfully
+- [x] Found `00-MathTests.fsx` in `Explorations/`
+- [x] Executed tests → all 28 pass ✓
 
 ### Reading & Understanding
-- [ ] Read `QUICK_START.md` (overview)
+- [x] Read `QUICK_START.md` (overview)
 - [ ] Read `PHASE_0_FUNDAMENTALS.md` (deep dive)
 - [ ] Read `DSP_REFERENCE.md` (reference sections as needed)
 - [ ] Understood sample rate concepts
