@@ -44,8 +44,13 @@ subtraktor/
 │     └─ IoTests.fs
 └─ README.md
 ```
-
 * .fsi only for stable public API
 * Domain split by responsibility: `Processing`, `IO`, `Interop`.
 * NAudio kept isolated in `Interop`, so pure API stays clean.
 * Tests mirror production modules.
+
+## Tools we might use
+* NAudio
+* ManagedBass
+* NWaves
+* [thinkdsp](https://github.com/AllenDowney/ThinkDSP)

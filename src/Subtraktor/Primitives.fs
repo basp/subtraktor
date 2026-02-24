@@ -26,20 +26,26 @@ type ValidationError =
 [<RequireQualifiedAccess>]
 module SampleRate =
     let create x : Result<SampleRate, ValidationError> =
-        Ok (SampleRate x)
+        match x with
+        | ok when ok > 0 -> Ok (SampleRate ok)
+        | _ -> Error (InvalidSampleRate x)
 
     let value (SampleRate x) = x
 
 [<RequireQualifiedAccess>]
 module ChannelCount =
     let create x : Result<ChannelCount, ValidationError> =
-        Ok (ChannelCount x)
+        match x with
+        | ok when x > 0 -> Ok (ChannelCount ok)
+        | _ -> Error (InvalidChannelCount x)
 
     let value (ChannelCount x) = x
 
 [<RequireQualifiedAccess>]
 module FrameCount =
     let create x : Result<FrameCount, ValidationError> =
-        Ok (FrameCount x)
+        match x with
+        | ok when x >= 0 -> Ok (FrameCount ok)
+        | _ -> Error (InvalidFrameCount x)
 
     let value (FrameCount x) = x

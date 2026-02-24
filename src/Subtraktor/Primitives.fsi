@@ -1,7 +1,9 @@
 namespace Subtraktor
 
 type SampleRate = private SampleRate of int
+
 type ChannelCount = private ChannelCount of int
+
 type FrameCount = private FrameCount of int
 
 type SampleFormat =
