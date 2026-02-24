@@ -217,14 +217,14 @@ for amp in testAmplitudes do
         (sprintf "Amplitude round-trip: %.2f → %.2f dB → %.2f" amp db ampBack)
 
 // Test: specific dB values
-assert_approx_equal 0.5 (decibelsToLinear -6.0) 1e-6
+assert_approx_equal 0.501187 (decibelsToLinear -6.0) 1e-6
     "−6 dB ≈ 0.5 linear amplitude"
 
 assert_approx_equal 0.1 (decibelsToLinear -20.0) 1e-6
     "−20 dB = 0.1 linear amplitude"
 
-// Test: −3 dB ≈ 0.707 (reciprocal of sqrt(2))
-assert_approx_equal (1.0 / Math.Sqrt(2.0)) (decibelsToLinear -3.0) 1e-6
+// Test: −3 dB ≈ 0.707 (approx reciprocal of sqrt(2))
+assert_approx_equal 0.707945 (decibelsToLinear -3.0) 1e-6
     "−3 dB ≈ 1/√2"
 
 // ============================================================================

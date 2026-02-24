@@ -1,18 +1,18 @@
-﻿#load @"..\Subtraktor\Synthesis\Math.fs"
+﻿#load @"..\Synthesis\Math.fs"
 
-/// Phase 0: Audio Mathematics Fundamentals - Interactive Exploration
-/// 
-/// This script helps us understand and verify the basic audio math we need for synthesis.
-/// 
-/// Key concepts to explore:
-/// 1. Sample rates and time conversions - understanding how time maps to discrete samples
-/// 2. MIDI and frequency conversions - standard note naming and pitch calculations  
-/// 3. Phase and radian arithmetic - how oscillators step through waves
-/// 4. Amplitude and decibels - loudness scales
-/// 
-/// Work through each section, run it, and verify the outputs make sense.
+// Phase 0: Audio Mathematics Fundamentals - Interactive Exploration
+// 
+// This script helps us understand and verify the basic audio math we need for synthesis.
+// 
+// Key concepts to explore:
+// 1. Sample rates and time conversions - understanding how time maps to discrete samples
+// 2. MIDI and frequency conversions - standard note naming and pitch calculations  
+// 3. Phase and radian arithmetic - how oscillators step through waves
+// 4. Amplitude and decibels - loudness scales
+// 
+// Work through each section, run it, and verify the outputs make sense.
 
-open Subtraktor
+open Subtraktor.Synthesis.Math
 
 // ============================================================================
 // SECTION 1: UNDERSTANDING SAMPLE RATE AND TIME
