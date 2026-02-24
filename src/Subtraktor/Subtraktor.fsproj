@@ -6,9 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Interop\" />
-    <Folder Include="IO\" />
-    <Folder Include="Processing\" />
     <Compile Include="Primitives.fsi" />
     <Compile Include="Primitives.fs" />
     <Compile Include="Errors.fsi" />
@@ -17,6 +14,14 @@
     <Compile Include="Pipeline.fs" />
     <Compile Include="AudioBuffer.fsi" />
     <Compile Include="AudioBuffer.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Explorations\00-MathTests.fsx" />
+    <None Include="Explorations\01-Math.fsx" />
+    <None Include="Explorations\NAudioExample.fsx" />
+    <None Include="Explorations\Sandbox.fsx" />
+    <None Include="Explorations\Sandbox2.fsx" />
   </ItemGroup>
 
 </Project>
