@@ -6,22 +6,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="Primitives.fsi" />
-    <Compile Include="Primitives.fs" />
-    <Compile Include="Errors.fsi" />
-    <Compile Include="Errors.fs" />
-    <Compile Include="Pipeline.fsi" />
-    <Compile Include="Pipeline.fs" />
-    <Compile Include="AudioBuffer.fsi" />
-    <Compile Include="AudioBuffer.fs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="Explorations\00-MathTests.fsx" />
     <None Include="Explorations\01-Math.fsx" />
     <None Include="Explorations\NAudioExample.fsx" />
     <None Include="Explorations\Sandbox.fsx" />
     <None Include="Explorations\Sandbox2.fsx" />
+    <Compile Include="Synthesis\Math.fsi" />
+    <Compile Include="Synthesis\Math.fs" />
   </ItemGroup>
 
 </Project>

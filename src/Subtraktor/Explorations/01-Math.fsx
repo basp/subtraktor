@@ -1,4 +1,6 @@
-﻿/// Phase 0: Audio Mathematics Fundamentals - Interactive Exploration
+﻿#load @"..\Subtraktor\Synthesis\Math.fs"
+
+/// Phase 0: Audio Mathematics Fundamentals - Interactive Exploration
 /// 
 /// This script helps us understand and verify the basic audio math we need for synthesis.
 /// 
@@ -10,9 +12,7 @@
 /// 
 /// Work through each section, run it, and verify the outputs make sense.
 
-#load @"..\Subtraktor\Synthesis\Math.fs"
-
-open Subtraktor.Synthesis.Math
+open Subtraktor
 
 // ============================================================================
 // SECTION 1: UNDERSTANDING SAMPLE RATE AND TIME
