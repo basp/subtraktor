@@ -20,3 +20,9 @@ applyTo '**/*.fs'
 - Although practicality beats purity.
 - Errors should never pass silently unless explicitly silenced.
 - In the face of ambiguity, refuse the temptation to guess.
+
+## Documentation and reference material
+- Keep **existing** documentation files in place.
+- Generate all **additional** documentation files in the `docs` folder.
+- Progress and checklists are kept in the `docs` folder as well.
+- Use Markdown format for documentation files.
