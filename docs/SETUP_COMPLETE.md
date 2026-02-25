@@ -88,12 +88,12 @@ After modifying `Math.fs`:
 
 By the end of this phase, you should understand:
 
-- [ ] **Sample rates** — why 44100 Hz, what it means for time mapping
-- [ ] **MIDI ↔ Hz** — converting note numbers to frequencies and back
-- [ ] **Phase accumulation** — how oscillators step through cycles
-- [ ] **Decibel scale** — why audio uses dB for amplitude, not linear
-- [ ] **Numerical precision** — why we need tolerance in float comparisons
-- [ ] **Pure functions** — how to write testable DSP code
+- [x] **Sample rates** — why 44100 Hz, what it means for time mapping
+- [x] **MIDI ↔ Hz** — converting note numbers to frequencies and back
+- [x] **Phase accumulation** — how oscillators step through cycles
+- [x] **Decibel scale** — why audio uses dB for amplitude, not linear
+- [x] **Numerical precision** — why we need tolerance in float comparisons
+- [x] **Pure functions** — how to write testable DSP code
 
 ### Checkpoint Questions
 

@@ -17,61 +17,61 @@ Use this file to track your progress through the synthesizer learning project.
 
 ### Reading & Understanding
 - [x] Read `QUICK_START.md` (overview)
-- [ ] Read `PHASE_0_FUNDAMENTALS.md` (deep dive)
-- [ ] Read `DSP_REFERENCE.md` (reference sections as needed)
-- [ ] Understood sample rate concepts
-- [ ] Understood MIDI ↔ frequency conversion
-- [ ] Understood phase accumulation
-- [ ] Understood decibel scale
+- [x] Read `PHASE_0_FUNDAMENTALS.md` (deep dive)
+- [x] Read `DSP_REFERENCE.md` (reference sections as needed)
+- [x] Understood sample rate concepts
+- [x] Understood MIDI ↔ frequency conversion
+- [x] Understood phase accumulation
+- [x] Understood decibel scale
 
 ### Hands-On Exploration
-- [ ] Executed `01-Math.fsx` Section 1 (sample rate conversions)
-- [ ] Executed `01-Math.fsx` Section 2 (MIDI & frequency)
-- [ ] Executed `01-Math.fsx` Section 3 (phase stepping)
-- [ ] Executed `01-Math.fsx` Section 4 (amplitude & dB)
-- [ ] Modified test values and re-ran sections
-- [ ] Predicted outputs correctly (mostly)
+- [x] Executed `01-Math.fsx` Section 1 (sample rate conversions)
+- [x] Executed `01-Math.fsx` Section 2 (MIDI & frequency)
+- [x] Executed `01-Math.fsx` Section 3 (phase stepping)
+- [x] Executed `01-Math.fsx` Section 4 (amplitude & dB)
+- [x] Modified test values and re-ran sections
+- [x] Predicted outputs correctly (mostly)
 
 ### Checkpoint Questions (Can answer without looking at code?)
-- [ ] Sample rate and time conversion
+- [x] Sample rate and time conversion
   - *At 44100 Hz, 1 second = ? samples*
   - *Answer: 44100 samples ✓*
 
-- [ ] MIDI to frequency
+- [x] MIDI to frequency
   - *MIDI note 69 = ? Hz*
   - *Answer: 440 Hz ✓*
 
-- [ ] Phase increment
+- [x] Phase increment
   - *What's the phase increment for 440 Hz at 44100 Hz?*
   - *Answer: 2π × 440 / 44100 ≈ 0.0628 rad/sample ✓*
 
-- [ ] Decibels
+- [x] Decibels
   - *What does −6 dB mean?*
   - *Answer: 0.5 linear amplitude (half the power) ✓*
 
-- [ ] Octave relationship
+- [x] Octave relationship
   - *What's the frequency ratio for one octave?*
   - *Answer: 2× (or 0.5× down) ✓*
 
 ### Confidence Check
-- [ ] Feel comfortable with sample rates
-- [ ] Understand MIDI note → frequency mapping
-- [ ] Grasp how oscillators step through cycles
-- [ ] Know why decibels matter
-- [ ] Can explain these concepts to someone else
+- [x] Feel comfortable with sample rates
+- [x] Understand MIDI note → frequency mapping
+- [x] Grasp how oscillators step through cycles
+- [x] Know why decibels matter
+- [x] Can explain these concepts to someone else
 
 ### Overall Phase 0 Status
-- [ ] **COMPLETE** — Ready for Phase 1!
+- [x] **COMPLETE** — Ready for Phase 1!
 
 ---
 
 ## Phase 1: Waveform Generators & Oscillators
 
 ### Planning
-- [ ] Read `PHASE_1_PREVIEW.md`
-- [ ] Understand what Phase 1 is about
-- [ ] Know what tests we'll write
-- [ ] Plan implementation order (sine first, then others)
+- [x] Read `PHASE_1_PREVIEW.md`
+- [x] Understand what Phase 1 is about
+- [x] Know what tests we'll write
+- [x] Plan implementation order (sine first, then others)
 
 ### Core Implementation
 - [ ] Create `Synthesis/Oscillators.fsi` (signatures)

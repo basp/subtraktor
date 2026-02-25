@@ -13,6 +13,8 @@
     <None Include="Explorations\Sandbox2.fsx" />
     <Compile Include="Synthesis\Math.fsi" />
     <Compile Include="Synthesis\Math.fs" />
+    <Compile Include="Synthesis\Oscillators.fsi" />
+    <Compile Include="Synthesis\Oscillators.fs" />
   </ItemGroup>
 
 </Project>
