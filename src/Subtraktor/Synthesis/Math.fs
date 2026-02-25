@@ -1,6 +1,7 @@
 ﻿namespace Subtraktor.Synthesis
 
 open System
+open FSharp.Data.UnitSystems.SI.UnitSymbols
 
 /// Core audio mathematical functions for DSP operations
 module Math =
@@ -8,7 +9,7 @@ module Math =
     // CONSTANTS
     // ============================================================================
     
-    let A4_HZ = 440.0    
+    let A4_HZ = 440.0<Hz>    
     let TWO_PI = 2.0 * Math.PI
     
     // ============================================================================
@@ -16,16 +17,17 @@ module Math =
     // ============================================================================
     
     /// Convert a time in seconds to a sample count given a sample rate.
-    let timeToSamples (sampleRate : int) (timeSeconds : float) : int =
+    let timeToSamples (sampleRate: int<Hz>) (timeSeconds: float<s>) : int =
         (timeSeconds * float sampleRate) |> int
     
     /// Convert a sample count to time in seconds given a sample rate.
-    let samplesToTime (sampleRate : int) (samples : int) : float =
+    let samplesToTime (sampleRate: int<Hz>) (samples : int) : float<s> =
         float samples / float sampleRate
+        |> LanguagePrimitives.FloatWithMeasure<s>
     
     /// Calculate the duration of one sample in seconds given a sample rate.
-    let sampleDuration (sampleRate : int) : float =
-        1.0 / float sampleRate
+    let sampleDuration (sampleRate : int<Hz>) : float<s> =
+        1.0<s> / float sampleRate
     
     // ============================================================================
     // FREQUENCY CONVERSIONS
@@ -34,22 +36,23 @@ module Math =
     /// Convert a MIDI note number to frequency in Hz.
     /// MIDI note 69 = A4 = 440 Hz (standard tuning).
     /// Each semitone is a factor of 2^(1/12) ≈ 1.0595...
-    let midiNoteToFrequency (midiNote : int) : float =
+    let midiNoteToFrequency (midiNote : int) : float<Hz> =
         let semitonesFromA4 = float (midiNote - 69)
         A4_HZ * (2.0 ** (semitonesFromA4 / 12.0))
     
     /// Convert frequency in Hz to a MIDI note number.
     /// Returns the nearest MIDI note (0-127).
-    let frequencyToMidiNote (frequencyHz : float) : int =
-        let semitonesFromA4 = 12.0 * Math.Log2(frequencyHz / A4_HZ)
+    let frequencyToMidiNote (freq: float<Hz>) : int =
+        let semitonesFromA4 = 12.0 * Math.Log2(freq / A4_HZ)
         (69 + (semitonesFromA4 |> Math.Round |> int))
-        |> max 0 |> min 127
+        |> max 0
+        |> min 127
     
     /// Convert frequency in Hz to an angular frequency (radians/sample).
     /// This is the phase increment per sample, used in oscillators.
     /// Formula: ω = 2π * f / sampleRate
-    let frequencyToPhaseIncrement (sampleRate : int) (frequencyHz : float) : float =
-        TWO_PI * frequencyHz / float sampleRate
+    let frequencyToPhaseIncrement (sampleRate: int<Hz>) (freq : float<Hz>) : float =
+        TWO_PI * freq / (float sampleRate |> LanguagePrimitives.FloatWithMeasure<Hz>)
     
     // ============================================================================
     // AMPLITUDE & DECIBELS

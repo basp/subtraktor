@@ -1,5 +1,7 @@
 ﻿namespace Subtraktor.Synthesis
 
+open FSharp.Data.UnitSystems.SI.UnitSymbols
+
 /// Audio Mathematics Fundamentals
 /// 
 /// This module provides basic mathematical operations needed for DSP and synthesis:
@@ -10,7 +12,7 @@
 /// 
 /// All functions are pure and work with SI units and standard audio conventions:
 /// - Time in seconds (float)
-/// - Frequency in Hz (float)  
+/// - Frequency in Hz (float)
 /// - Amplitude in linear scale [0.0..1.0] or as needed
 /// - Sample rates in Hz (int)
 
@@ -22,7 +24,7 @@ module Math =
     // ============================================================================
     
     /// Standard concert pitch A4 in Hz (440 Hz)
-    val A4_HZ : float
+    val A4_HZ : float<Hz>
     
     /// Two pi, commonly used for phase and radian calculations
     val TWO_PI : float
@@ -34,17 +36,17 @@ module Math =
     /// Convert a time in seconds to a sample count given a sample rate.
     /// 
     /// Example: at 44100 Hz, 1.0 second = 44100 samples
-    val timeToSamples : sampleRate:int -> timeSeconds:float -> int
+    val timeToSamples : sampleRate:int<Hz> -> timeSeconds:float<s> -> int
     
     /// Convert a sample count to time in seconds given a sample rate.
     /// 
     /// Example: at 44100 Hz, 44100 samples = 1.0 second
-    val samplesToTime : sampleRate:int -> samples:int -> float
+    val samplesToTime : sampleRate:int<Hz> -> samples:int -> float<s>
     
     /// Calculate the duration of one sample in seconds given a sample rate.
     /// 
     /// Example: at 44100 Hz, one sample duration ≈ 0.0000227 seconds
-    val sampleDuration : sampleRate:int -> float
+    val sampleDuration : sampleRate:int<Hz> -> float<s>
     
     // ============================================================================
     // FREQUENCY CONVERSIONS
@@ -53,17 +55,17 @@ module Math =
     /// Convert a MIDI note number to frequency in Hz.
     /// MIDI note 69 = A4 = 440 Hz (standard tuning).
     /// Each semitone multiplies frequency by 2^(1/12).
-    val midiNoteToFrequency : midiNote:int -> float
+    val midiNoteToFrequency : midiNote:int -> float<Hz>
     
     /// Convert frequency in Hz to a MIDI note number.
     /// Returns the nearest MIDI note (0-127).
-    val frequencyToMidiNote : frequencyHz:float -> int
+    val frequencyToMidiNote : freq:float<Hz> -> int
     
     /// Convert frequency in Hz to an angular frequency (radians/sample).
     /// This is used internally for oscillator phase calculations.
     /// 
     /// Formula: ω = 2π * f / sampleRate
-    val frequencyToPhaseIncrement : sampleRate:int -> frequencyHz:float -> float
+    val frequencyToPhaseIncrement : sampleRate:int<Hz> -> freq:float<Hz> -> float
     
     // ============================================================================
     // AMPLITUDE & DECIBELS

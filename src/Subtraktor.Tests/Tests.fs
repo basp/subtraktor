@@ -5,59 +5,59 @@ open FSharp.Data.UnitSystems.SI.UnitSymbols
 open Xunit
 open Subtraktor.Synthesis.Math
 
-let ``44.1KHz`` = 44100
+let ``44.1KHz`` = 44100<Hz>
 
 [<Fact>]
 let ``Sample duration matches inverse of sample rate`` () =
-    let actual = sampleDuration ``44.1KHz``
-    let expected = 1.0 / float ``44.1KHz``
+    let actual = sampleDuration ``44.1KHz`` |> float
+    let expected = 1.0 / float ``44.1KHz`` |> float
     Assert.Equal(expected, actual, 1e-10)
 
 [<Fact>]
 let ``Time to samples is inverse of samples to time`` () =
-    let expected = 2.5
+    let expected = 2.5<s>
     let samples = timeToSamples ``44.1KHz`` expected
     let actual = samplesToTime ``44.1KHz`` samples
-    Assert.Equal(expected, actual, 1e-10)
+    Assert.Equal(float expected, float actual, 1e-10)
 
 [<Fact>]
 let ``1 second equals sample rate`` () =
-    let actual = timeToSamples ``44.1KHz`` 1.0
-    Assert.Equal(``44.1KHz``, actual)
+    let actual = timeToSamples ``44.1KHz`` 1.0<s>
+    Assert.Equal(int ``44.1KHz``, actual)
 
 [<Fact>]
 let ``0.5 seconds at 44100 Hz equals 22050 samples`` () =
-    let actual = timeToSamples ``44.1KHz`` 0.5
+    let actual = timeToSamples ``44.1KHz`` 0.5<s>
     Assert.Equal(22050, actual)
     
 [<Fact>]
 let ``0.01 seconds at 44100 Hz equals 441 samples`` () =
-    let actual = timeToSamples ``44.1KHz`` 0.01
+    let actual = timeToSamples ``44.1KHz`` 0.01<s>
     Assert.Equal(441, actual)
     
 [<Fact>]
 let ``44100 samples at 44100 Hz equals 1 second`` () =
     let actual = samplesToTime ``44.1KHz`` 44100
-    Assert.Equal(1.0, actual)
+    Assert.Equal(1.0<s>, actual)
     
 [<Fact>]
 let ``22050 samples at 44100 Hz equals 0.5 second`` () =
     let actual = samplesToTime ``44.1KHz`` 22050
-    Assert.Equal(0.5, actual)
+    Assert.Equal(0.5<s>, actual)
 
 [<Fact>]
 let ``A4 reference frequency is 440 KHz`` () =
-    Assert.Equal(440.0, A4_HZ)
+    Assert.Equal(440.0<Hz>, A4_HZ)
 
 [<Fact>]
 let ``A5 is double A4 frequency`` () =
     let a5 = midiNoteToFrequency 81
-    Assert.Equal(880.0, a5)
+    Assert.Equal(880.0<Hz>, a5)
     
 [<Fact>]
 let ``A3 is half A4 frequency`` () =
     let a3 = midiNoteToFrequency 57
-    Assert.Equal(220.0, a3)
+    Assert.Equal(220.0<Hz>, a3)
     
 [<Fact>]
 let ``C notes across different octaves`` () =
@@ -76,36 +76,41 @@ let ``Semitone ratio is 2^(1/12)`` () =
 
 [<Fact>]
 let ``Frequency to MIDI note conversion (round trip)`` () =
-    let expected = [220.0; 440.0; 880.0; 110.0]
-    let notes = expected |> List.map frequencyToMidiNote
-    let actual = notes |> List.map midiNoteToFrequency
-    Assert.Equal<float list>(expected, actual)
+    let expected = [220.0<Hz>; 440.0<Hz>; 880.0<Hz>; 110.0<Hz>]
+    let notes =
+        expected
+        |> List.map frequencyToMidiNote
+    let actual =
+        notes
+        |> List.map midiNoteToFrequency
+        |> List.map float
+    Assert.Equal<float list>(expected |> List.map float, actual)
     
 [<Fact>]
 let ``Very low frequency clamps to MIDI 0`` () =
-    let actual = frequencyToMidiNote 0.1
+    let actual = frequencyToMidiNote 0.1<Hz>
     Assert.Equal(0, actual)
 
 [<Fact>]    
 let ``Very high frequency clamps to MIDI 127`` () =
-    let actual = frequencyToMidiNote 20000.0
+    let actual = frequencyToMidiNote 20000.0<Hz>
     Assert.Equal(127, actual)
 
 [<Fact>]   
 let ``Phase increment for 440 Hz frequency at 44.1 KHz sample rate`` () =
-    let actual = frequencyToPhaseIncrement ``44.1KHz`` 440.0
+    let actual = frequencyToPhaseIncrement ``44.1KHz`` 440.0<Hz>
     let expected = (2.0 * Math.PI * 440.0) / float ``44.1KHz``
     Assert.Equal(expected, actual)
 
 [<Fact>]
 let ``0 Hz frequency should give phase increment of 0`` () =
-    let actual = frequencyToPhaseIncrement ``44.1KHz`` 0.0
+    let actual = frequencyToPhaseIncrement ``44.1KHz`` 0.0<Hz>
     Assert.Equal(0.0, actual)
   
 [<Fact>]
 let ``Phase increment at different sample rates`` () =
-    let phase48k = frequencyToPhaseIncrement 48000 440.0
-    let phase44k = frequencyToPhaseIncrement 44100 440.0
+    let phase48k = frequencyToPhaseIncrement 48000<Hz> 440.0<Hz>
+    let phase44k = frequencyToPhaseIncrement 44100<Hz> 440.0<Hz>
     Assert.True(phase48k < phase44k)
     
 [<Fact>]
