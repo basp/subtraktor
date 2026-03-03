@@ -486,6 +486,16 @@ module ``Event stream normalization`` =
         let actualTime = findTime label matches events
         Assert.Equal(expectedTime, actualTime)
 
+    let private assertSameTime
+        (labelA: string)
+        (matchesA: MidiEvent -> bool)
+        (labelB: string)
+        (matchesB: MidiEvent -> bool)
+        (events: (Time * MidiEvent) list) : unit =
+        let timeA = events |> findTime labelA matchesA
+        let timeB = events |> findTime labelB matchesB
+        Assert.Equal(timeA, timeB)
+    
     let private isNoteOn pitch octave =
         function
         | NoteOn((p, o), _) -> p = pitch && o = octave
@@ -521,20 +531,14 @@ module ``Event stream normalization`` =
             
         Assert.Equal(4, events.Length)
         
-        let cOffTime =
-            events
-            |> List.pick (fun (t, e) ->
-                if isNoteOffC4 e then Some t
-                else None)
-       
-        let eOnTime =
-            events
-            |> List.pick (fun (t, e) ->
-                if isNoteOnE4 e then Some t
-                else None)
-            
-        Assert.Equal(t 1 4, cOffTime)
-        Assert.Equal(t 1 4, eOnTime)
+        events
+        |> assertSameTime "C4 NoteOff" isNoteOffC4 "E4 NoteOn" isNoteOnE4        
+        
+        events
+        |> assertOnset "C4 NoteOff" (t 1 4) isNoteOffC4       
+        
+        events
+        |> assertOnset "E4 NoteOn" (t 1 4) isNoteOnE4
 
     [<Fact>]
     let ``Parallel chord onset`` () =
@@ -551,16 +555,10 @@ module ``Event stream normalization`` =
             music
             |> Music.interpret (Rational.ofInt 0)
             |> Seq.toList
-            
-        let onsets =
-            events
-            |> List.choose (fun (t, e) ->
-                match e with
-                | NoteOn _ -> Some (t, e)
-                | _ -> None)
-                 
-        Assert.Equal(3, onsets.Length)
-        Assert.All(onsets, fun (t, _e) -> Assert.Equal(Rational.ofInt 0, t))
+
+        assertOnset "C4 NoteOn" (Rational.ofInt 0) isNoteOnC4 events
+        assertOnset "E4 NoteOn" (Rational.ofInt 0) isNoteOnE4 events
+        assertOnset "G4 NoteOn" (Rational.ofInt 0) isNoteOnG4 events
         
     [<Fact>]
     let ``Nested Seq+Par handoff`` () =
@@ -581,9 +579,5 @@ module ``Event stream normalization`` =
             |> Music.interpret (Rational.ofInt 0)
             |> Seq.toList
         
-        let gOnTime =
-            events
-            |> List.pick (fun (t, e) -> if isNoteOnG4 e then Some t else None)
-            
-        Assert.Equal (t 1 4, gOnTime)
-        
+        events
+        |> assertOnset "G4 NoteOn after Par block" (t 1 4) isNoteOnG4        
