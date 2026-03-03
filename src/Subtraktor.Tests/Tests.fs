@@ -3,6 +3,7 @@
 open System
 open FSharp.Data.UnitSystems.SI.UnitSymbols
 open Xunit
+open Subtraktor.Units
 open Subtraktor.Synthesis.Math
 
 let ``44.1KHz`` = 44100<Hz>
@@ -99,13 +100,15 @@ let ``Very high frequency clamps to MIDI 127`` () =
 [<Fact>]   
 let ``Phase increment for 440 Hz frequency at 44.1 KHz sample rate`` () =
     let actual = frequencyToPhaseIncrement ``44.1KHz`` 440.0<Hz>
-    let expected = (2.0 * Math.PI * 440.0) / float ``44.1KHz``
+    let expected =
+        (2.0 * Math.PI * 440.0) / float ``44.1KHz``
+        |> LanguagePrimitives.FloatWithMeasure<rad>
     Assert.Equal(expected, actual)
 
 [<Fact>]
 let ``0 Hz frequency should give phase increment of 0`` () =
     let actual = frequencyToPhaseIncrement ``44.1KHz`` 0.0<Hz>
-    Assert.Equal(0.0, actual)
+    Assert.Equal(0.0<rad>, actual)
   
 [<Fact>]
 let ``Phase increment at different sample rates`` () =
@@ -115,23 +118,25 @@ let ``Phase increment at different sample rates`` () =
     
 [<Fact>]
 let ``Normalized phase keeps values in [0, 2π)`` () =
-    let phase = normalizePhase (3.0 * Math.PI)
-    Assert.True(phase >= 0.0 && phase < TWO_PI)
+    let phase = normalizePhase (3.0<rad> * Math.PI)
+    Assert.True(phase >= 0.0<rad> && phase < TWO_PI)
 
 [<Fact>]
 let ``Normalized phase of 0 is 0`` () =
-    let actual = normalizePhase 0.0
-    Assert.Equal(0.0, actual)
+    let actual = normalizePhase 0.0<rad>
+    Assert.Equal(0.0<rad>, actual)
 
 [<Fact>]
 let ``Normalized phase of 2π is 0`` () =
     let actual = normalizePhase TWO_PI
-    Assert.Equal(0.0, actual)
+    Assert.Equal(0.0<rad>, actual)
 
 [<Fact>]
 let ``Normalized phase of negative value wraps correctly`` () =
-    let actual = normalizePhase (-Math.PI)
-    Assert.Equal(Math.PI, actual)
+    let angle = -Math.PI |> LanguagePrimitives.FloatWithMeasure<rad>
+    let actual = normalizePhase angle
+    let expected = Math.PI |> LanguagePrimitives.FloatWithMeasure<rad>
+    Assert.Equal(expected, actual)
 
 [<Fact>]
 let ``Wrapped phase wraps correctly`` () =    
@@ -146,7 +151,7 @@ let ``Wrapped phase of negative values wraps correctly`` () =
 [<Fact>]
 let ``1.0 linear is 0 dB`` () =
     let actual = linearToDecibels 1.0
-    Assert.Equal(0.0, actual)
+    Assert.Equal(0.0<dB>, actual)
 
 [<Fact>]
 let ``Decibels to linear is inverse of linear to decibels`` () =
@@ -157,10 +162,275 @@ let ``Decibels to linear is inverse of linear to decibels`` () =
 
 [<Fact>]
 let ``Specific dB values`` () =
-    let tests = [-6.0; -20.0; -3.0]
+    let tests = [-6.0<dB>; -20.0<dB>; -3.0<dB>]
     let expected = [0.501187; 0.1; 0.707945]
     let actual = tests |> List.map decibelsToLinear
     Assert.Equal(expected.Length, actual.Length)
     expected
     |> List.zip actual
     |> List.iter (fun (e, a) -> Assert.Equal(e, a, 1e-6))
+
+module ``Testing rational numbers`` =
+    open Subtraktor.Numerics
+
+    [<Fact>]
+    let ``Test create and normalization`` () =
+        let tests = [
+            (Rational.Create(2, 4), Rational.Create(1, 2))
+            ((Rational.create -3 6), (Rational.create -1 2))
+            ((Rational.create 3 -6), (Rational.create -1 2))
+            ((Rational.create -3 -6), (Rational.create 1 2))        
+        ]
+
+        tests|> List.iter Assert.Equal
+
+    let r n d = Rational.create n d
+    
+    [<Fact>]
+    let ``Adding zero to a rational leaves it unchanged`` () =
+        let rat = r 3 4
+        let result = Rational.add rat Rational.zero
+        Assert.Equal(rat, result)
+        
+    [<Fact>]
+    let ``Adding two identical rationals doubles the numerator`` () =
+        let rat = r 1 3
+        let result = Rational.add rat rat
+        Assert.Equal(r 2 3, result)
+
+    [<Fact>]
+    let ``Adding rationals with same denominator`` () =
+        let a = r 1 4
+        let b = r 1 4
+        let result = Rational.add a b
+        Assert.Equal(r 1 2, result)
+
+    [<Fact>]
+    let ``Adding rationals with different denominators`` () =
+        let a = r 1 2
+        let b = r 1 3
+        let result = Rational.add a b
+        Assert.Equal(r 5 6, result)
+
+    [<Fact>]
+    let ``Added results are automatically normalized`` () =
+        let a = r 1 2
+        let b = r 1 2
+        let result = Rational.add a b
+        Assert.Equal(r 1 1, result)
+
+    [<Fact>]
+    let ``Adding negative and positive rationals`` () =
+        let a = r 3 4
+        let b = r -1 4
+        let result = Rational.add a b
+        Assert.Equal(r 1 2, result)
+
+    [<Fact>]
+    let ``Adding two negative rationals`` () =
+        let a = r -1 3
+        let b = r -1 6
+        let result = Rational.add a b
+        Assert.Equal(r -1 2, result)
+        
+    [<Fact>]
+    let ``Adding with cancellation of common factors`` () =
+        let a = r 1 4
+        let b = r 1 6
+        let result = Rational.add a b
+        Assert.Equal(r 5 12, result)
+
+    [<Fact>]
+    let ``Subtracting zero leaves rational unchanged`` () =
+        let rat = r 5 7
+        let result = Rational.subtract rat Rational.zero
+        Assert.Equal(rat, result)
+        
+    [<Fact>]
+    let ``Subtracting a rational from itself gives zero`` () =
+        let rat = r 3 5
+        let result = Rational.subtract rat rat
+        Assert.Equal(Rational.zero, result)
+        
+    [<Fact>]
+    let ``Subtracting rationals with same denominator`` () =
+        let a = r 3 4
+        let b = r 1 4
+        let result = Rational.subtract a b
+        Assert.Equal(r 1 2, result)
+
+    [<Fact>]
+    let ``Subtracting rationals with different denominators`` () =
+        let a = r 1 2
+        let b = r 1 3
+        let result = Rational.subtract a b
+        Assert.Equal(r 1 6, result)
+        
+    [<Fact>]
+    let ``Subtracting results in negative rational`` () =
+        let a = r 1 4
+        let b = r 3 4
+        let result = Rational.subtract a b
+        Assert.Equal(r -1 2, result)
+
+    [<Fact>]
+    let ``Subtracting negative from positive`` () =
+        let a = r 3 4
+        let b = r -1 4
+        let result = Rational.subtract a b
+        Assert.Equal(r 1 1, result)
+
+    [<Fact>]        
+    let ``Subtracting two negative rationals`` () =
+        let a = r -1 3
+        let b = r -1 6
+        let result = Rational.subtract a b
+        Assert.Equal(r -1 6, result)
+        
+    [<Fact>]
+    let ``Addition is commutative`` () =
+        let a = r 2 5
+        let b = r 3 7
+        let r1 = Rational.add a b
+        let r2 = Rational.add b a
+        Assert.Equal(r1, r2)
+        
+    [<Fact>]
+    let ``Subtraction is not commutative`` () =
+        let a = r 2 5
+        let b = r 3 7
+        let r1 = Rational.subtract a b
+        let r2 = Rational.subtract b a
+        Assert.Equal(r1.Numerator, -r2.Numerator)
+        Assert.Equal(r1.Denominator, r2.Denominator)
+        
+    [<Fact>]
+    let ``Multiplying by zero gives zero`` () =
+        let rat = r 3 4
+        let result = Rational.multiply rat Rational.zero
+        Assert.Equal(Rational.zero, result)
+
+    [<Fact>]
+    let ``Multiplying by one leaves rational unchanged`` () =
+        let rat = r 3 4
+        let result = Rational.multiply rat Rational.one
+        Assert.Equal(rat, result)
+        
+    [<Fact>]
+    let ``Multiplying two identical rationals`` () =
+        let rat = r 2 3
+        let result = Rational.multiply rat rat
+        Assert.Equal(r 4 9, result)
+        
+    [<Fact>]
+    let ``Multiplying rations with different denominators`` () =
+        let a = r 2 3
+        let b = r 3 4
+        let result = Rational.multiply a b
+        Assert.Equal(r 1 2, result)
+
+    [<Fact>]
+    let ``Multiplied results are automatically normalized`` () =
+        let a = r 2 4
+        let b = r 2 4
+        let result = Rational.multiply a b
+        Assert.Equal(r 1 4, result)
+        
+    [<Fact>]
+    let ``Multiplying negative and positive rationals`` () =
+        let a = r 2 3
+        let b = r -3 4
+        let result = Rational.multiply a b
+        Assert.Equal(r -1 2, result)
+        
+    [<Fact>]
+    let ``Multiplying two negative rationals`` () =
+        let a = r -2 3
+        let b = r -3 4
+        let result = Rational.multiply a b
+        Assert.Equal(r 1 2, result)
+        
+    [<Fact>]
+    let ``Multiplying with cancellation of common factors`` () =
+        let a = r 3 4
+        let b = r 4 5
+        let result = Rational.multiply a b
+        Assert.Equal(r 3 5, result)
+        
+    [<Fact>]
+    let ``Multiplication is commutative`` () =
+        let a = r 2 5
+        let b = r 3 7
+        let r1 = Rational.multiply a b
+        let r2 = Rational.multiply b a
+        Assert.Equal(r1, r2)
+        
+    [<Fact>]
+    let ``Dividing by one leaves rational unchanged`` () =
+        let rat = r 5 7
+        let result = Rational.divide rat Rational.one
+        Assert.Equal(rat, result)
+        
+    [<Fact>]
+    let ``Dividing a rational by itself gives one`` () =
+        let rat = r 3 5
+        let result = Rational.divide rat rat
+        Assert.Equal(Rational.one, result)
+        
+    [<Fact>]
+    let ``Dividing zero by a non-zero rational gives zero`` () =
+        let rat = r 3 5
+        let result = Rational.divide Rational.zero rat
+        Assert.Equal(Rational.zero, result)
+    
+    [<Fact>]    
+    let ``Dividing by zero throws exception`` () =
+        let rat = r 3 5
+        Assert.Throws<ArgumentException>(fun () ->
+            Rational.divide rat Rational.zero
+            |> ignore)
+    
+    [<Fact>]
+    let ``Diving rations with different denominators`` () =
+        let a = r 2 3
+        let b = r 3 4
+        let result = Rational.divide a b
+        Assert.Equal(r 8 9, result)
+    
+    [<Fact>]
+    let ``Division results are automatically normalized`` () =
+        let a = r 2 4
+        let b = r 1 2
+        let result = Rational.divide a b
+        Assert.Equal(r 1 1, result)
+        
+    [<Fact>]
+    let ``Dividing negative and positive rationals`` () =
+        let a = r 2 3
+        let b = r -3 4
+        let result = Rational.divide a b
+        Assert.Equal(r -8 9, result)
+        
+    [<Fact>]
+    let ``Dividing two negative rationals`` () =
+        let a = r -2 3
+        let b = r -3 4
+        let result = Rational.divide a b
+        Assert.Equal(r 8 9, result)
+        
+    [<Fact>]
+    let ``Division is not commutative`` () =
+        let a = r 2 5
+        let b = r 3 7
+        let r1 = Rational.divide a b
+        let r2 = Rational.divide b a
+        Assert.Equal(r1.Numerator, r2.Denominator)
+        Assert.Equal(r1.Denominator, r2.Numerator)
+        
+    [<Fact>]
+    let ``Multiplication and division are inverse operations`` () =
+        let a = r 2 5
+        let b = r 3 7
+        let product = Rational.multiply a b
+        let result = Rational.divide product b
+        Assert.Equal(a, result)

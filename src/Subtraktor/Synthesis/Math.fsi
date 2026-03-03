@@ -1,6 +1,7 @@
 ﻿namespace Subtraktor.Synthesis
 
 open FSharp.Data.UnitSystems.SI.UnitSymbols
+open Subtraktor.Units
 
 /// Audio Mathematics Fundamentals
 /// 
@@ -27,7 +28,7 @@ module Math =
     val A4_HZ : float<Hz>
     
     /// Two pi, commonly used for phase and radian calculations
-    val TWO_PI : float
+    val TWO_PI : float<rad>
     
     // ============================================================================
     // TIME & SAMPLE CONVERSIONS
@@ -36,17 +37,17 @@ module Math =
     /// Convert a time in seconds to a sample count given a sample rate.
     /// 
     /// Example: at 44100 Hz, 1.0 second = 44100 samples
-    val timeToSamples : sampleRate:int<Hz> -> timeSeconds:float<s> -> int
+    val timeToSamples : sampleRate: int<Hz> -> timeSeconds:float<s> -> int
     
     /// Convert a sample count to time in seconds given a sample rate.
     /// 
     /// Example: at 44100 Hz, 44100 samples = 1.0 second
-    val samplesToTime : sampleRate:int<Hz> -> samples:int -> float<s>
+    val samplesToTime : sampleRate: int<Hz> -> samples:int -> float<s>
     
     /// Calculate the duration of one sample in seconds given a sample rate.
     /// 
     /// Example: at 44100 Hz, one sample duration ≈ 0.0000227 seconds
-    val sampleDuration : sampleRate:int<Hz> -> float<s>
+    val sampleDuration : sampleRate: int<Hz> -> float<s>
     
     // ============================================================================
     // FREQUENCY CONVERSIONS
@@ -65,7 +66,7 @@ module Math =
     /// This is used internally for oscillator phase calculations.
     /// 
     /// Formula: ω = 2π * f / sampleRate
-    val frequencyToPhaseIncrement : sampleRate:int<Hz> -> freq:float<Hz> -> float
+    val frequencyToPhaseIncrement : sampleRate:int<Hz> -> freq:float<Hz> -> float<rad>
     
     // ============================================================================
     // AMPLITUDE & DECIBELS
@@ -76,12 +77,12 @@ module Math =
     /// Note: 0 dB = 1.0 linear amplitude
     /// Negative dB values represent quieter amplitudes
     /// Formula: dB = 20 * log10(amplitude)
-    val linearToDecibels : linear:float -> float
+    val linearToDecibels : linear: float -> float<dB>
     
     /// Convert amplitude from decibels (dB) to linear scale.
     /// 
     /// Formula: linear = 10^(dB/20)
-    val decibelsToLinear : decibels:float -> float
+    val decibelsToLinear : decibels: float<dB> -> float
     
     // ============================================================================
     // PHASE & RADIAN OPERATIONS
@@ -89,8 +90,8 @@ module Math =
     
     /// Normalize a phase value to the range [0, 2π).
     /// This keeps phase values bounded and prevents numerical issues.
-    val normalizePhase : phase:float -> float
+    val normalizePhase : phase: float<rad> -> float<rad>
     
     /// Wrap a phase value to [0, 1.0) range (useful when working with normalized phase).
-    val wrapPhase : phase:float -> float
+    val wrapPhase : phase: float -> float
 
