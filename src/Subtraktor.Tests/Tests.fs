@@ -465,26 +465,44 @@ module ``Event stream normalization`` =
     open Subtraktor.Numerics
 
     let private t (n: int) (d: int) = Rational.Create(n, d)
+
+    let private findTime
+        (label: string)
+        (matches: MidiEvent -> bool)
+        (events: (Time * MidiEvent) list) : Rational =
+        events
+        |> List.tryPick (fun (t, e) ->
+            if matches e then Some t
+            else None)
+        |> function
+            | Some t -> t
+            | None -> failwithf $"Expected event not found: %s{label}"
+
+    let private assertOnset
+        (label: string)
+        (expectedTime: Time)
+        (matches: MidiEvent -> bool)
+        (events: (Time * MidiEvent) list) : unit =
+        let actualTime = findTime label matches events
+        Assert.Equal(expectedTime, actualTime)
+
+    let private isNoteOn pitch octave =
+        function
+        | NoteOn((p, o), _) -> p = pitch && o = octave
+        | _ -> false
     
-    let private isNoteOnC4 =
+    let private isNoteOff pitch octave =
         function
-        | NoteOn((C, 4), _) -> true
+        | NoteOff((p, o), _) -> p = pitch && o = octave
         | _ -> false
+    
+    let private isNoteOnC4 = isNoteOn C 4
         
-    let private isNoteOffC4 =
-        function
-        | NoteOff((C, 4), _) -> true
-        | _ -> false
+    let private isNoteOffC4 = isNoteOff C 4
         
-    let private isNoteOnE4 =
-        function
-        | NoteOn((E, 4), _) -> true
-        | _ -> false
+    let private isNoteOnE4 = isNoteOn E 4
         
-    let private isNoteOnG4 =
-        function
-        | NoteOn((G, 4), _) -> true
-        | _ -> false
+    let private isNoteOnG4 = isNoteOn G 4
 
     [<Fact>]
     let ``Seq boundary trigger`` () =
