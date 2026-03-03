@@ -1,4 +1,4 @@
-﻿module Tests
+﻿module Subtraktor.Tests
 
 open System
 open FSharp.Data.UnitSystems.SI.UnitSymbols
@@ -459,3 +459,6 @@ module ``Testing rational numbers`` =
         let c = r 1 3
         Assert.Equal(a, b)
         Assert.NotEqual(a, c)
+        
+// module ``Music tests`` () =
+//     let m = Seq [ d4; d4; e5; ]

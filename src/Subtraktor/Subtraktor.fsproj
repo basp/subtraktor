@@ -10,12 +10,13 @@
     <None Include="Explorations\NAudioExample.fsx" />
     <None Include="Explorations\Sandbox.fsx" />
     <None Include="Explorations\Sandbox2.fsx" />
-    <None Include="Explorations\FSoM.fsx" />
     <Compile Include="Synthesis\Math.fsi" />
     <Compile Include="Synthesis\Math.fs" />
     <Compile Include="Synthesis\Oscillators.fsi" />
     <Compile Include="Synthesis\Oscillators.fs" />
     <Compile Include="Numerics\Rational.fs" />
+    <Compile Include="Interpreter.fs" />
+    <None Include="FSoM.fsx" />
   </ItemGroup>
 
 </Project>
