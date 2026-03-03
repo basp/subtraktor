@@ -24,11 +24,14 @@ type Rational =
             // Normalized numerator and denominator.
             sn / g, sd / g            
     
+    static member Create(num: int, den: int) =
+        Rational.Create(bigint num, bigint den)
+    
     static member Create(num: bigint, den: bigint) =
         let nn, dd = normalize num den
         Rational(nn, dd)
     
-    static member FromInt32(x: int) = Rational(bigint x, 1I)
+    static member FromInt32(x: int) = Rational.Create(x, 1)
     
     member x.Numerator = x.n
     member x.Denominator = x.d
@@ -51,16 +54,14 @@ type Rational =
     
     override x.Equals(obj) =
         match obj with
-        | :? Rational as y -> x.n = y.n && x.d = y.d
+        | :? Rational as y -> (x :> IEquatable<Rational>).Equals(y)
         | _ -> false
         
     override x.GetHashCode() =
         HashCode.Combine(x.n, x.d)
         
     interface IEquatable<Rational> with
-        member x.Equals(y: Rational) =
-            x.n = y.n &&
-            x.d = y.d
+        member x.Equals(y: Rational) = x.n = y.n && x.d = y.d
 
     interface IComparable<Rational> with
         member x.CompareTo(y: Rational) =
@@ -69,23 +70,18 @@ type Rational =
     interface IComparable with
         member x.CompareTo(obj) =
             match obj with
-            | :? Rational as y -> compare (x.n * y.d) (y.n * x.d)
+            | null -> 1
+            | :? Rational as y -> (x :> IComparable<Rational>).CompareTo(y)
             | _ -> invalidArg (nameof obj) "Argument must be Rational."
          
 [<RequireQualifiedAccess>]
 module Rational =
-    let create n d = Rational.Create(n, d)
     let numerator (r: Rational) = r.Numerator
     let denominator (r: Rational) = r.Denominator
     let ofInt x = Rational.FromInt32(x)    
     let zero = Rational.Zero
     let one = Rational.One    
     let add (a: Rational) (b: Rational) = a + b
-    let sub (a: Rational) (b: Rational) = a - b
+    let sub (a: Rational) (b: Rational) = a - b    
     let mul (a: Rational) (b: Rational) = a * b
     let div (a: Rational) (b: Rational) = a / b
-    
-    // Deprecated.
-    let subtract (a: Rational) (b: Rational) = a - b
-    let multiply (a: Rational) (b: Rational) = a * b
-    let divide (a: Rational) (b: Rational) = a / b

@@ -15,7 +15,6 @@
     <Compile Include="Synthesis\Math.fs" />
     <Compile Include="Synthesis\Oscillators.fsi" />
     <Compile Include="Synthesis\Oscillators.fs" />
-    <Compile Include="OldRational.fs" />
     <Compile Include="Numerics\Rational.fs" />
   </ItemGroup>
 

@@ -177,14 +177,14 @@ module ``Testing rational numbers`` =
     let ``Test create and normalization`` () =
         let tests = [
             (Rational.Create(2, 4), Rational.Create(1, 2))
-            ((Rational.create -3 6), (Rational.create -1 2))
-            ((Rational.create 3 -6), (Rational.create -1 2))
-            ((Rational.create -3 -6), (Rational.create 1 2))        
+            (Rational.Create(-3, 6), Rational.Create(-1, 2))
+            (Rational.Create(3, -6), Rational.Create(-1, 2))
+            (Rational.Create(-3, -6), Rational.Create(1, 2))        
         ]
 
         tests|> List.iter Assert.Equal
 
-    let r n d = Rational.create n d
+    let r (n: int) (d: int) = Rational.Create(n, d)
     
     [<Fact>]
     let ``Adding zero to a rational leaves it unchanged`` () =
@@ -243,48 +243,48 @@ module ``Testing rational numbers`` =
     [<Fact>]
     let ``Subtracting zero leaves rational unchanged`` () =
         let rat = r 5 7
-        let result = Rational.subtract rat Rational.zero
+        let result = Rational.sub rat Rational.zero
         Assert.Equal(rat, result)
         
     [<Fact>]
     let ``Subtracting a rational from itself gives zero`` () =
         let rat = r 3 5
-        let result = Rational.subtract rat rat
+        let result = Rational.sub rat rat
         Assert.Equal(Rational.zero, result)
         
     [<Fact>]
     let ``Subtracting rationals with same denominator`` () =
         let a = r 3 4
         let b = r 1 4
-        let result = Rational.subtract a b
+        let result = Rational.sub a b
         Assert.Equal(r 1 2, result)
 
     [<Fact>]
     let ``Subtracting rationals with different denominators`` () =
         let a = r 1 2
         let b = r 1 3
-        let result = Rational.subtract a b
+        let result = Rational.sub a b
         Assert.Equal(r 1 6, result)
         
     [<Fact>]
     let ``Subtracting results in negative rational`` () =
         let a = r 1 4
         let b = r 3 4
-        let result = Rational.subtract a b
+        let result = Rational.sub a b
         Assert.Equal(r -1 2, result)
 
     [<Fact>]
     let ``Subtracting negative from positive`` () =
         let a = r 3 4
         let b = r -1 4
-        let result = Rational.subtract a b
+        let result = Rational.sub a b
         Assert.Equal(r 1 1, result)
 
     [<Fact>]        
     let ``Subtracting two negative rationals`` () =
         let a = r -1 3
         let b = r -1 6
-        let result = Rational.subtract a b
+        let result = Rational.sub a b
         Assert.Equal(r -1 6, result)
         
     [<Fact>]
@@ -299,131 +299,131 @@ module ``Testing rational numbers`` =
     let ``Subtraction is not commutative`` () =
         let a = r 2 5
         let b = r 3 7
-        let r1 = Rational.subtract a b
-        let r2 = Rational.subtract b a
+        let r1 = Rational.sub a b
+        let r2 = Rational.sub b a
         Assert.Equal(r1.Numerator, -r2.Numerator)
         Assert.Equal(r1.Denominator, r2.Denominator)
         
     [<Fact>]
     let ``Multiplying by zero gives zero`` () =
         let rat = r 3 4
-        let result = Rational.multiply rat Rational.zero
+        let result = Rational.mul rat Rational.zero
         Assert.Equal(Rational.zero, result)
 
     [<Fact>]
     let ``Multiplying by one leaves rational unchanged`` () =
         let rat = r 3 4
-        let result = Rational.multiply rat Rational.one
+        let result = Rational.mul rat Rational.one
         Assert.Equal(rat, result)
         
     [<Fact>]
     let ``Multiplying two identical rationals`` () =
         let rat = r 2 3
-        let result = Rational.multiply rat rat
+        let result = Rational.mul rat rat
         Assert.Equal(r 4 9, result)
         
     [<Fact>]
     let ``Multiplying rations with different denominators`` () =
         let a = r 2 3
         let b = r 3 4
-        let result = Rational.multiply a b
+        let result = Rational.mul a b
         Assert.Equal(r 1 2, result)
 
     [<Fact>]
     let ``Multiplied results are automatically normalized`` () =
         let a = r 2 4
         let b = r 2 4
-        let result = Rational.multiply a b
+        let result = Rational.mul a b
         Assert.Equal(r 1 4, result)
         
     [<Fact>]
     let ``Multiplying negative and positive rationals`` () =
         let a = r 2 3
         let b = r -3 4
-        let result = Rational.multiply a b
+        let result = Rational.mul a b
         Assert.Equal(r -1 2, result)
         
     [<Fact>]
     let ``Multiplying two negative rationals`` () =
         let a = r -2 3
         let b = r -3 4
-        let result = Rational.multiply a b
+        let result = Rational.mul a b
         Assert.Equal(r 1 2, result)
         
     [<Fact>]
     let ``Multiplying with cancellation of common factors`` () =
         let a = r 3 4
         let b = r 4 5
-        let result = Rational.multiply a b
+        let result = Rational.mul a b
         Assert.Equal(r 3 5, result)
         
     [<Fact>]
     let ``Multiplication is commutative`` () =
         let a = r 2 5
         let b = r 3 7
-        let r1 = Rational.multiply a b
-        let r2 = Rational.multiply b a
+        let r1 = Rational.mul a b
+        let r2 = Rational.mul b a
         Assert.Equal(r1, r2)
         
     [<Fact>]
     let ``Dividing by one leaves rational unchanged`` () =
         let rat = r 5 7
-        let result = Rational.divide rat Rational.one
+        let result = Rational.div rat Rational.one
         Assert.Equal(rat, result)
         
     [<Fact>]
     let ``Dividing a rational by itself gives one`` () =
         let rat = r 3 5
-        let result = Rational.divide rat rat
+        let result = Rational.div rat rat
         Assert.Equal(Rational.one, result)
         
     [<Fact>]
     let ``Dividing zero by a non-zero rational gives zero`` () =
         let rat = r 3 5
-        let result = Rational.divide Rational.zero rat
+        let result = Rational.div Rational.zero rat
         Assert.Equal(Rational.zero, result)
     
     [<Fact>]    
     let ``Dividing by zero throws exception`` () =
         let rat = r 3 5
-        Assert.Throws<ArgumentException>(fun () ->
-            Rational.divide rat Rational.zero
+        Assert.Throws<DivideByZeroException>(fun () ->
+            Rational.div rat Rational.zero
             |> ignore)
     
     [<Fact>]
     let ``Diving rations with different denominators`` () =
         let a = r 2 3
         let b = r 3 4
-        let result = Rational.divide a b
+        let result = Rational.div a b
         Assert.Equal(r 8 9, result)
     
     [<Fact>]
     let ``Division results are automatically normalized`` () =
         let a = r 2 4
         let b = r 1 2
-        let result = Rational.divide a b
+        let result = Rational.div a b
         Assert.Equal(r 1 1, result)
         
     [<Fact>]
     let ``Dividing negative and positive rationals`` () =
         let a = r 2 3
         let b = r -3 4
-        let result = Rational.divide a b
+        let result = Rational.div a b
         Assert.Equal(r -8 9, result)
         
     [<Fact>]
     let ``Dividing two negative rationals`` () =
         let a = r -2 3
         let b = r -3 4
-        let result = Rational.divide a b
+        let result = Rational.div a b
         Assert.Equal(r 8 9, result)
         
     [<Fact>]
     let ``Division is not commutative`` () =
         let a = r 2 5
         let b = r 3 7
-        let r1 = Rational.divide a b
-        let r2 = Rational.divide b a
+        let r1 = Rational.div a b
+        let r2 = Rational.div b a
         Assert.Equal(r1.Numerator, r2.Denominator)
         Assert.Equal(r1.Denominator, r2.Numerator)
         
@@ -431,6 +431,31 @@ module ``Testing rational numbers`` =
     let ``Multiplication and division are inverse operations`` () =
         let a = r 2 5
         let b = r 3 7
-        let product = Rational.multiply a b
-        let result = Rational.divide product b
+        let product = Rational.mul a b
+        let result = Rational.div product b
         Assert.Equal(a, result)
+        
+    [<Fact>]
+    let ``Hashing equivalent rationals`` () =
+        let a = r 2 4
+        let b = r 1 2
+        let c = r 1 3
+        Assert.Equal(a.GetHashCode(), b.GetHashCode())
+        Assert.NotEqual(a.GetHashCode(), c.GetHashCode())
+
+    [<Fact>]
+    let ``Comparison between equivalent rationals`` () =
+        let a = r 2 4
+        let b = r 1 2
+        let c = r 1 3
+        Assert.Equal(0, compare a b)
+        Assert.Equal(1, compare a c)
+        Assert.Equal(-1, compare c b)
+        
+    [<Fact>]
+    let ``Equality between equivalent rationals`` () =
+        let a = r 2 4
+        let b = r 1 2
+        let c = r 1 3
+        Assert.Equal(a, b)
+        Assert.NotEqual(a, c)
