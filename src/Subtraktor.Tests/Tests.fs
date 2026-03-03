@@ -459,6 +459,113 @@ module ``Testing rational numbers`` =
         let c = r 1 3
         Assert.Equal(a, b)
         Assert.NotEqual(a, c)
+      
+module ``Event stream normalization`` =
+    open Subtraktor.Interpreter
+    open Subtraktor.Numerics
+
+    let private t (n: int) (d: int) = Rational.Create(n, d)
+    
+    let private isNoteOnC4 =
+        function
+        | NoteOn((C, 4), _) -> true
+        | _ -> false
         
-// module ``Music tests`` () =
-//     let m = Seq [ d4; d4; e5; ]
+    let private isNoteOffC4 =
+        function
+        | NoteOff((C, 4), _) -> true
+        | _ -> false
+        
+    let private isNoteOnE4 =
+        function
+        | NoteOn((E, 4), _) -> true
+        | _ -> false
+        
+    let private isNoteOnG4 =
+        function
+        | NoteOn((G, 4), _) -> true
+        | _ -> false
+
+    [<Fact>]
+    let ``Seq boundary trigger`` () =
+        // C4 quarter note, then E4 quarter note.
+        // Expect E4 NoteOn exactly at C4 NoteOff (1/4).        
+        let music =
+            Seq [
+                Prim (note qn (C, 4))
+                Prim (note qn (E, 4))
+            ]
+            
+        let events =
+            music
+            |> Music.interpret (Rational.ofInt 0)
+            |> Seq.toList
+            
+        Assert.Equal(4, events.Length)
+        
+        let cOffTime =
+            events
+            |> List.pick (fun (t, e) ->
+                if isNoteOffC4 e then Some t
+                else None)
+       
+        let eOnTime =
+            events
+            |> List.pick (fun (t, e) ->
+                if isNoteOnE4 e then Some t
+                else None)
+            
+        Assert.Equal(t 1 4, cOffTime)
+        Assert.Equal(t 1 4, eOnTime)
+
+    [<Fact>]
+    let ``Parallel chord onset`` () =
+        // C major triad as parallel quarter notes
+        // Expect all NoteOn events at start time 0.
+        let music =
+            Par [
+                Prim (note qn (C, 4))
+                Prim (note qn (E, 4))
+                Prim (note qn (G, 4))
+            ]
+        
+        let events =
+            music
+            |> Music.interpret (Rational.ofInt 0)
+            |> Seq.toList
+            
+        let onsets =
+            events
+            |> List.choose (fun (t, e) ->
+                match e with
+                | NoteOn _ -> Some (t, e)
+                | _ -> None)
+                 
+        Assert.Equal(3, onsets.Length)
+        Assert.All(onsets, fun (t, _e) -> Assert.Equal(Rational.ofInt 0, t))
+        
+    [<Fact>]
+    let ``Nested Seq+Par handoff`` () =
+        // First: parallel dyad C4+E4 quarter
+        // Then: sequential handoff to G4 quarter
+        // Expect G4 NoteOn at 1/4 (max duration of first Par block).        
+        let music =
+            Seq [
+                Par [
+                    Prim (note qn (C, 4))
+                    Prim (note qn (E, 4))
+                ]
+                Prim (note qn (G, 4))
+            ]
+        
+        let events =
+            music
+            |> Music.interpret (Rational.ofInt 0)
+            |> Seq.toList
+        
+        let gOnTime =
+            events
+            |> List.pick (fun (t, e) -> if isNoteOnG4 e then Some t else None)
+            
+        Assert.Equal (t 1 4, gOnTime)
+        
